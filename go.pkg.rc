@@ -1,0 +1,19 @@
+name = go
+version = 1.7.3
+source = https://storage.googleapis.com/golang/go$version.src.tar.gz
+cksum = 79430a0027a09b0b3ad57e214c4c1acfdd7af290961dd08d322818895af1ef44
+
+fn build-phase {
+	GOBIN = $pkgdir/bin
+	GOPATH = ''
+	GOROOT_BOOTSTRAP = $prefix/lib/go-bootstrap
+	GOROOT_FINAL = $prefix/lib/$name
+	@ { cd ./src && ./make.bash }
+}
+
+fn install-phase {
+	cd ..
+	mkdir -p $pkgdir/lib
+	cp -r go $pkgdir/lib/$name
+	mv $pkgdir/lib/$name/bin $pkgdir
+}

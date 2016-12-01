@@ -1,0 +1,10 @@
+name = fonts-go
+version = 20161116.b7f8df6
+revision = b7f8df6bc082334698d4505fb85fa05e99156b72
+source = https://github.com/golang/image/archive/$revision.tar.gz
+cksum = 41c620e40e47c3912ca87b4488b8936b6773761bc2388f0797b39cf5a6ad77e1
+
+fn install-phase {
+	mkdir -p $pkgdir/share/fonts
+	cp font/gofont/ttfs/*.ttf $pkgdir/share/fonts
+}

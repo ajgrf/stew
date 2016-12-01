@@ -1,0 +1,17 @@
+name = go-bootstrap
+version = 1.4.3
+source = https://storage.googleapis.com/golang/go$version.src.tar.gz
+cksum = 486db10dc571a55c8d795365070f66d343458c48
+
+fn build-phase {
+	GOBIN = ''
+	GOPATH = ''
+	GOROOT_FINAL = $prefix/lib/$name
+	@ { cd ./src && ./make.bash }
+}
+
+fn install-phase {
+	cd ..
+	mkdir -p $pkgdir/lib
+	cp -r go $pkgdir/lib/$name
+}

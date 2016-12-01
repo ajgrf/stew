@@ -1,0 +1,8 @@
+name = fonts-iosevka
+version = 1.9.6
+source = https://github.com/be5invis/Iosevka/releases/download/v$version/iosevka-pack-$version.7z
+cksum = 663ddd2e2e20b9cd52b4928258b85f2b5217ec91d30b765d529a3fca7a7508e1
+
+fn unpack-phase {
+	7z x -o$pkgdir/share/fonts iosevka-pack-$version.7z
+}
