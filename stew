@@ -1,0 +1,205 @@
+#!/bin/sh
+test $pid || eval 'exec rc -x -e "$0" "$@"'
+
+# Stew is a simple package manager for installing software outside of your
+# distribution's repositories. It leverages the excellent GNU Stow utility to
+# manage packages, but alleviates much of the boilerplate you might otherwise
+# need to write if you wanted to automate your stow installations.
+
+# configuration
+prefix = $home/.local
+pkgpath = .
+
+stowdir = $prefix/stow
+
+fn main {
+	if (test -f $1.pkg.rc) @ {
+		name = $1
+		pkgdir = $stowdir/$name
+		. ./$1.pkg.rc
+
+		# include $version in $pkgdir if it's defined
+		if (test $#version -gt 0) {
+			pkgdir = $stowdir/$name-$version
+		}
+
+		# finally run the package function
+		if (! test -d $pkgdir) {
+			package
+		}
+	}
+}
+
+# exit codes:
+# 2 usage error
+# 3 packaging error
+fn error {
+	code = $1
+	shift
+	echo stew: $* >[1=2]
+	exit $code
+}
+
+# A stew package is an rc script with the following properties:
+#
+#   * lives in a file named $name.pkg.rc in a directory in $pkgpath
+#   * consists only of function and variable definitions (when run or sourced
+#     it does nothing on its own)
+#   * defines a `package` function which installs the software into $pkgdir
+#     and runs stow on it 
+#   * inherits a default implementation and helper functions from this file
+
+# This is the default implementation of the `package` function. You should not
+# normally override this function. Instead, you should override the individual
+# phases that it calls.
+fn package {
+	download-phase
+	setup-phase
+	unpack-phase
+	configure-phase
+	build-phase
+	install-phase
+	cleanup-phase
+	stow-phase
+}
+
+fn download-phase {
+	if (test $#source -ne $#cksum) {
+		error 3 $name: 'len($source) != len($cksum)'
+	}
+
+	for (i in `{seq $#source}) { #`
+		fetch $source($i)
+
+		if (! verify-cksum `{basename $source($i)} $cksum($i)) { #`
+			error 3 could not verify integrity of file `{basename $source($i)}
+		}
+	}
+}
+
+fn fetch {
+	if (! test -f `{basename $1}) { #`
+		curl -O -L $1
+	}
+}
+
+# `verify-cksum file sum` returns null (a.k.a. true) only if file matches sum
+fn verify-cksum {
+	hashlen=`{echo -n $2 | wc -c} sum='' { #`
+		switch ($hashlen) {
+		case 32
+			sum = `{md5sum $1} #`
+		case 40
+			sum = `{sha1sum $1} #`
+		case 64
+			sum = `{sha256sum $1} #`
+		case 128
+			sum = `{sha512sum $1} #`
+		}
+		test $2 '=' $sum(1)
+	}
+}
+
+fn setup-phase {
+	# set build flags (obtained by running dpkg-buildflags)
+	CFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
+		'-Werror=format-security'
+	CPPFLAGS = '-D_FORTIFY_SOURCE=2'
+	CXXFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
+		'-Werror=format-security'
+	FCFLAGS = '-g -O2 -fstack-protector-strong'
+	FFLAGS = '-g -O2 -fstack-protector-strong'
+	GCJFLAGS = '-g -O2 -fstack-protector-strong'
+	LDFLAGS = '-Wl,-z,relro'
+	OBJCFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
+		'-Werror=format-security'
+	OBJCXXFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
+		'-Werror=format-security'
+
+	LD_RUN_PATH = $prefix/lib
+	PKG_CONFIG_PATH = $prefix/lib/pkgconfig
+
+	# work in temporary directory
+	if (test $#TMPDIR -eq 0) TMPDIR = /tmp
+	builddir = $TMPDIR/stew.$pid.$name-build
+	mkdir $builddir
+	for (file in $source) {
+		cp `{basename $file} $builddir #`
+	}
+	cd $builddir
+}
+
+fn unpack-phase {
+	for (file in $source) {
+		if (~ $file *.tar *.tar.[gx]z *.tar.bz2 *.t[bgx]z *.tb2 \
+			*.tbz2 *.zip *.7z) {
+			extract `{basename $file} #`
+		}
+	}
+
+	cd */
+}
+
+fn extract {
+	switch ($1) {
+	case *.tar
+		tar x < $1
+	case *.tar.bz2 *.tb2 *.tbz *.tbz2
+		bunzip2 < $1 | tar x
+	case *.tar.gz *.tgz
+		gunzip < $1 | tar x
+	case *.tar.xz *.txz
+		unxz < $1 | tar x
+	case *.zip
+		unzip $1
+	case *.7z
+		7z x $1
+	}
+}
+
+fn configure-phase {
+	# include suckless-style config.h file
+	if (test -f ../$name.config.h) {
+		cp ../$name.config.h config.h
+	}
+
+	if (test -x configure) {
+		if (test $#configureflags -eq 0) configureflags = --prefix'='$prefix
+		./configure $configureflags
+	}
+}
+
+fn build-phase {
+	if (test -f makefile -o -f Makefile -o -f GNUmakefile) {
+		make
+	}
+}
+
+fn install-phase {
+	if (test -f makefile -o -f Makefile -o -f GNUmakefile) {
+		autosudo make PREFIX'='$pkgdir install
+	}
+}
+
+fn cleanup-phase {
+	cd
+	if (~ $builddir $TMPDIR/stew.$pid.$name-build /tmp/stew.$pid.$name-build) {
+		rm -r $builddir
+	}
+}
+
+# calls sudo unless prefix is in /home
+fn autosudo {
+	cmd = (sudo $*)
+	if (~ $prefix /home/*) {
+		cmd = ($*)
+	}
+	$cmd
+}
+
+fn stow-phase {
+	autosudo chmod -R a-w $stowdir/$name-$version
+	autosudo stow -d $stowdir $name-$version
+}
+
+main $*
