@@ -1,5 +1,5 @@
 #!/bin/sh
-test $pid || eval 'exec rc -x -e "$0" "$@"'
+test $pid || eval 'exec rc -e "$0" "$@"'
 
 # Stew is a simple package manager for installing software outside of your
 # distribution's repositories. It leverages the excellent GNU Stow utility to
@@ -72,7 +72,7 @@ fn download-phase {
 		fetch $source($i)
 
 		if (! verify-cksum `{basename $source($i)} $cksum($i)) { #`
-			error 3 could not verify integrity of file `{basename $source($i)}
+			error 3 could not verify integrity of file `{basename $source($i)} #`
 		}
 	}
 }
@@ -137,7 +137,8 @@ fn unpack-phase {
 		}
 	}
 
-	cd */
+	dirs = */
+	cd $dirs(1)
 }
 
 fn extract {
