@@ -1,8 +1,8 @@
 name = dvtm
 version = 0.15
-source = (http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz
+source = (http://www.brain-dump.org/projects/dvtm/dvtm-0.15.tar.gz \
 	dvtm.config.h)
-cksum = (8f2015c05e2ad82f12ae4cf12b363d34f527a4bbc8c369667f239e4542e1e510
+cksum = (8f2015c05e2ad82f12ae4cf12b363d34f527a4bbc8c369667f239e4542e1e510 \
 	a1a5902086d4858d63a6fad37d18ce5f5904ed04d5a724bf763cbcf283936c95)
 
 fn install-phase {
