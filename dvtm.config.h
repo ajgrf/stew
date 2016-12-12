@@ -13,12 +13,14 @@
 
 enum {
 	DEFAULT,
+	UI,
 	BLUE,
 	RED,
 };
 
 static Color colors[] = {
-	[DEFAULT] = { .fg = -1,         .bg = COLOR_CYAN, .fg256 = -1,         .bg256 = COLOR_CYAN, },
+	[DEFAULT] = { .fg = -1,         .bg = -1,         .fg256 = -1,         .bg256 = -1,         },
+	[UI] =      { .fg = -1,         .bg = COLOR_CYAN, .fg256 = -1,         .bg256 = COLOR_CYAN, },
 	[BLUE] =    { .fg = COLOR_BLUE, .bg = COLOR_CYAN, .fg256 = COLOR_BLUE, .bg256 = COLOR_CYAN, },
 	[RED] =     { .fg = COLOR_RED,  .bg = COLOR_CYAN, .fg256 = COLOR_RED,  .bg256 = COLOR_CYAN, },
 };
@@ -27,7 +29,7 @@ static Color colors[] = {
 /* curses attributes for the currently focused window */
 #define SELECTED_ATTR   (COLOR(BLUE) | A_NORMAL)
 /* curses attributes for normal (not selected) windows */
-#define NORMAL_ATTR     (COLOR(DEFAULT) | A_NORMAL)
+#define NORMAL_ATTR     (COLOR(UI) | A_NORMAL)
 /* curses attributes for a window with pending urgent flag */
 #define URGENT_ATTR     NORMAL_ATTR
 /* curses attributes for the status bar */
@@ -50,7 +52,7 @@ static Color colors[] = {
 /* curses attributes for the currently selected tags */
 #define TAG_SEL      (COLOR(BLUE) | A_BOLD)
 /* curses attributes for not selected tags which contain no windows */
-#define TAG_NORMAL   (COLOR(DEFAULT) | A_NORMAL)
+#define TAG_NORMAL   (COLOR(UI) | A_NORMAL)
 /* curses attributes for not selected tags which contain windows */
 #define TAG_OCCUPIED (COLOR(BLUE) | A_NORMAL)
 /* curses attributes for not selected tags which with urgent windows */
