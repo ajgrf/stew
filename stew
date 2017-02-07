@@ -1,5 +1,5 @@
 #!/bin/sh
-test $pid || eval 'exec rc -e "$0" "$@"'
+test $pid || eval 'exec rc "$0" "$@"'
 
 # Stew is a simple package manager for installing software outside of your
 # distribution's repositories. It leverages the excellent GNU Stow utility to
@@ -199,7 +199,7 @@ fn autosudo {
 }
 
 fn stow-phase {
-	autosudo chmod -R a-w $stowdir/$name-$version
+	# autosudo chmod -R a-w $stowdir/$name-$version
 	autosudo stow -d $stowdir $name-$version
 }
 
