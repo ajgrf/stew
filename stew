@@ -1,5 +1,5 @@
-#!/bin/sh
-test $pid || eval 'exec rc "$0" "$@"'
+#!/bin/mksh
+set -e
 
 # Stew is a simple package manager for installing software outside of your
 # distribution's repositories. It leverages the excellent GNU Stow utility to
@@ -7,42 +7,44 @@ test $pid || eval 'exec rc "$0" "$@"'
 # need to write if you wanted to automate your stow installations.
 
 # configuration
-prefix = $home/.local
-pkgpath = .
+prefix="$HOME/.local"
+pkgpath=.
 
-stowdir = $prefix/stow
+stowdir="$prefix/stow"
 
-fn main {
-	if (test -f $1.pkg.rc) @ {
-		name = $1
-		pkgdir = $stowdir/$name
-		. ./$1.pkg.rc
+main() {
+	if test -f "$1.pkg.sh"; then
+		(
+			name="$1"
+			pkgdir="$stowdir/$name"
+			. "$pkgpath/$1.pkg.sh"
 
-		# include $version in $pkgdir if it's defined
-		if (test $#version -gt 0) {
-			pkgdir = $stowdir/$name-$version
-		}
+			# include $version in $pkgdir if it's defined
+			if test "$version"; then
+				pkgdir="$stowdir/$name-$version"
+			fi
 
-		# finally run the package function
-		if (! test -d $pkgdir) {
-			package
-		}
-	}
+			# finally run the package function
+			if ! test -d "$pkgdir"; then
+				package
+			fi
+		)
+	fi
 }
 
 # exit codes:
 # 2 usage error
 # 3 packaging error
-fn error {
-	code = $1
+error() {
+	local code="$1"
 	shift
-	echo stew: $* >[1=2]
-	exit $code
+	echo stew: "$@" >&2
+	exit "$code"
 }
 
-# A stew package is an rc script with the following properties:
+# A stew package is a shell script with the following properties:
 #
-#   * lives in a file named $name.pkg.rc in a directory in $pkgpath
+#   * lives in a file named $name.pkg.sh in a directory in $pkgpath
 #   * consists only of function and variable definitions (when run or sourced
 #     it does nothing on its own)
 #   * defines a `package` function which installs the software into $pkgdir
@@ -52,155 +54,160 @@ fn error {
 # This is the default implementation of the `package` function. You should not
 # normally override this function. Instead, you should override the individual
 # phases that it calls.
-fn package {
-	download-phase
-	setup-phase
-	unpack-phase
-	configure-phase
-	build-phase
-	install-phase
-	cleanup-phase
-	stow-phase
+package() {
+	download_phase
+	setup_phase
+	unpack_phase
+	configure_phase
+	build_phase
+	install_phase
+	cleanup_phase
+	stow_phase
 }
 
-fn download-phase {
-	if (test $#source -ne $#cksum) {
-		error 3 $name: 'len($source) != len($cksum)'
-	}
+download_phase() {
+	if test ${#source[@]} -ne ${#cksum[@]}; then
+		error 3 "$name:" 'len($source) != len($cksum)'
+	fi
 
-	for (i in `{seq $#source}) { #`
-		fetch $source($i)
-
-		if (! verify-cksum `{basename $source($i)} $cksum($i)) { #`
-			error 3 could not verify integrity of file `{basename $source($i)} #`
-		}
-	}
+	for i in ${!source[@]}; do
+		fetch "${source[$i]}"
+		if ! verify_cksum $(basename "${source[$i]}") "${cksum[$i]}"; then
+			error 3 "could not verify integrity of file $(basename "${source[$i]}")"
+		fi
+	done
 }
 
-fn fetch {
-	if (! test -f `{basename $1}) { #`
-		curl -O -L $1
-	}
+fetch() {
+	if ! test -f $(basename "$1"); then
+		curl -O -L "$1"
+	fi
 }
 
-# `verify-cksum file sum` returns null (a.k.a. true) only if file matches sum
-fn verify-cksum {
-	hashlen=`{echo -n $2 | wc -c} sum='' { #`
-		switch ($hashlen) {
-		case 32
-			sum = `{md5sum $1} #`
-		case 40
-			sum = `{sha1sum $1} #`
-		case 64
-			sum = `{sha256sum $1} #`
-		case 128
-			sum = `{sha512sum $1} #`
-		}
-		test $2 '=' $sum(1)
-	}
+# `verify_cksum file sum` returns null (a.k.a. true) only if file matches sum
+verify_cksum() {
+	local hashlen sum
+	hashlen=$(echo -n "$2" | wc -c)
+
+	case "$hashlen" in
+	32)
+		sum=$(md5sum "$1" | cut -d ' ' -f 1) ;;
+	40)
+		sum=$(sha1sum "$1" | cut -d ' ' -f 1) ;;
+	64)
+		sum=$(sha256sum "$1" | cut -d ' ' -f 1) ;;
+	128)
+		sum=$(sha512sum "$1" | cut -d ' ' -f 1) ;;
+	esac
+
+	test "$sum" = "$2"
 }
 
-fn setup-phase {
-	# set build flags (obtained by running dpkg-buildflags)
-	CFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
-		'-Werror=format-security'
-	CPPFLAGS = '-D_FORTIFY_SOURCE=2'
-	CXXFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
-		'-Werror=format-security'
-	FCFLAGS = '-g -O2 -fstack-protector-strong'
-	FFLAGS = '-g -O2 -fstack-protector-strong'
-	GCJFLAGS = '-g -O2 -fstack-protector-strong'
-	LDFLAGS = '-Wl,-z,relro'
-	OBJCFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
-		'-Werror=format-security'
-	OBJCXXFLAGS = '-g -O2 -fstack-protector-strong -Wformat '^\
-		'-Werror=format-security'
+setup_phase() {
+	# set build flags
+	eval "$(dpkg-buildflags --export=sh)"
 
-	LD_RUN_PATH = $prefix/lib
-	PKG_CONFIG_PATH = $prefix/lib/pkgconfig
+	export LD_RUN_PATH="$prefix/lib"
+	export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
 
 	# work in temporary directory
-	if (test $#TMPDIR -eq 0) TMPDIR = /tmp
-	builddir = $TMPDIR/stew.$pid.$name-build
-	mkdir $builddir
-	for (file in $source) {
-		cp `{basename $file} $builddir #`
-	}
-	cd $builddir
+	if test -z "$TMPDIR"; then
+		TMPDIR="/tmp"
+	fi
+	builddir="$TMPDIR/stew.$$.$name-build"
+	mkdir "$builddir"
+	for file in "${source[@]}"; do
+		cp "$(basename "$file")" "$builddir"
+	done
+	cd "$builddir"
 }
 
-fn unpack-phase {
-	for (file in $source) {
-		if (~ $file *.tar *.tar.[gx]z *.tar.bz2 *.t[bgx]z *.tb2 \
-			*.tbz2 *.zip *.7z) {
-			extract `{basename $file} #`
-		}
-	}
+unpack_phase() {
+	for file in "${source[@]}"; do
+		case "$file" in
+		*.tar|*.tar.[gx]z|*.tar.bz2|*.t[bgx]z|*.tb2|*.tbz2|*.zip|*.7z)
+			extract "$(basename "$file")"
+		esac
+	done
 
-	dirs = */
-	cd $dirs(1)
+	for dir in */; do
+		test -d "$dir" && cd "$dir" || true
+		return
+	done
 }
 
-fn extract {
-	switch ($1) {
-	case *.tar
-		tar x < $1
-	case *.tar.bz2 *.tb2 *.tbz *.tbz2
-		bunzip2 < $1 | tar x
-	case *.tar.gz *.tgz
-		gunzip < $1 | tar x
-	case *.tar.xz *.txz
-		unxz < $1 | tar x
-	case *.zip
-		unzip $1
-	case *.7z
-		7z x $1
-	}
+extract() {
+	case "$1" in
+	*.tar)
+		tar x < "$1" ;;
+	*.tar.bz2|*.tb2|*.tbz|*.tbz2)
+		bunzip2 < "$1" | tar x ;;
+	*.tar.gz|*.tgz)
+		gunzip < "$1" | tar x ;;
+	*.tar.xz|*.txz)
+		unxz < "$1" | tar x ;;
+	*.zip)
+		unzip "$1" ;;
+	*.7z)
+		7z x "$1" ;;
+	esac
 }
 
-fn configure-phase {
+configure_phase() {
 	# include suckless-style config.h file
-	if (test -f ../$name.config.h) {
-		cp ../$name.config.h config.h
-	}
+	if test -f "../$name.config.h"; then
+		cp "../$name.config.h" config.h
+	fi
 
-	if (test -x configure) {
-		if (test $#configureflags -eq 0) configureflags = --prefix'='$prefix
-		./configure $configureflags
-	}
+	if test -x configure; then
+		if test ${#configureflags[@]} -eq 0; then
+			configureflags=("--prefix=${prefix}")
+		fi
+		./configure "${configureflags[@]}"
+	fi
 }
 
-fn build-phase {
-	if (test -f makefile -o -f Makefile -o -f GNUmakefile) {
+build_phase() {
+	if test -f makefile -o -f Makefile -o -f GNUmakefile; then
 		make
-	}
+	fi
 }
 
-fn install-phase {
-	if (test -f makefile -o -f Makefile -o -f GNUmakefile) {
-		autosudo make PREFIX'='$pkgdir install
-	}
+install_phase() {
+	if test -f makefile -o -f Makefile -o -f GNUmakefile; then
+		autosudo make PREFIX="$pkgdir" install
+	fi
+
+	if find . -name '*.[to]t[fc]' | grep -q ''; then
+		mkdir -p "$pkgdir/share/fonts"
+		find . -name '*.[to]t[fc]' -print0 | xargs -0 cp -t "$pkgdir/share/fonts"
+	fi
 }
 
-fn cleanup-phase {
+cleanup_phase() {
 	cd
-	if (~ $builddir $TMPDIR/stew.$pid.$name-build /tmp/stew.$pid.$name-build) {
-		rm -r $builddir
-	}
+	case "$builddir" in
+	"${TMPDIR:-/tmp}/stew.$$.$name-build")
+		rm -rf "$builddir"
+		;;
+	esac
 }
 
 # calls sudo unless prefix is in /home
-fn autosudo {
-	cmd = (sudo $*)
-	if (~ $prefix /home/*) {
-		cmd = ($*)
-	}
-	$cmd
+autosudo() {
+	case "$prefix" in
+	/home/*)
+		"$@"
+		;;
+	*)
+		sudo "$@"
+		;;
+	esac
 }
 
-fn stow-phase {
+stow_phase() {
 	# autosudo chmod -R a-w $stowdir/$name-$version
-	autosudo stow -d $stowdir $name-$version
+	autosudo stow -d "$stowdir" "$name-$version"
 }
 
-main $*
+main "$@"
