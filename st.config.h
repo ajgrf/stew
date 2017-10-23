@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char font[] = "Go Mono:pixelsize=16:antialias=true:autohint=true";
+static char font[] = "Go Mono:size=11:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -87,20 +87,20 @@ static const char *colorname[] = {
 	/* 8 normal colors */
 	"#000000",  /* black */
 	"#880000",  /* red */
-	"#004d00",  /* green */
-	"#eeee9e",  /* yellow */
+	"#005500",  /* green */
+	"#663311",  /* yellow */
 	"#004488",  /* blue */
 	"#770077",  /* magenta */
-	"#eaffff",  /* cyan */
-	"#ffffea",  /* white */
+	"#007777",  /* cyan */
+	"#eeeecc",  /* white */
 
 	/* 8 bright colors */
-	"#000000",  /* black */
-	"#930000",  /* red */
-	"#005300",  /* green */
+	"#eaeaea",  /* black */
+	"#ffeaea",  /* red */
+	"#eaffea",  /* green */
 	"#eeee9e",  /* yellow */
-	"#0000ee",  /* blue */
-	"#800080",  /* magenta */
+	"#cceeff",  /* blue */
+	"#ffeaff",  /* magenta */
 	"#eaffff",  /* cyan */
 	"#ffffea",  /* white */
 
@@ -117,7 +117,7 @@ static const char *colorname[] = {
  * foreground, background, cursor, reverse cursor
  */
 static unsigned int defaultfg = 0;
-static unsigned int defaultbg = 7;
+static unsigned int defaultbg = 15;
 static unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 
