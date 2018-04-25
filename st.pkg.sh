@@ -15,7 +15,7 @@ build_phase() {
 }
 
 install_phase() {
-	TERMINFO="$pkgdir/share/terminfo"
+	export TERMINFO="$pkgdir/share/terminfo"
 	mkdir -p "$TERMINFO"
 	autosudo make PREFIX="$pkgdir" install
 }
