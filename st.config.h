@@ -7,6 +7,7 @@
  */
 static char font[] = "Go Mono:size=11:antialias=true:autohint=true";
 static int borderpx = 2;
+#define histsize 10000
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -85,30 +86,28 @@ static unsigned int tabspaces = 8;
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-	"#000000",  /* black */
-	"#880000",  /* red */
-	"#005500",  /* green */
-	"#663311",  /* yellow */
-	"#004488",  /* blue */
-	"#770077",  /* magenta */
-	"#007777",  /* cyan */
-	"#eeeecc",  /* white */
+	"#000000",
+	"#880000",
+	"#005500",
+	"#663311",
+	"#004488",
+	"#770077",
+	"#007777",
+	"#eeeecc",
 
 	/* 8 bright colors */
-	"#eaeaea",  /* black */
-	"#ffeaea",  /* red */
-	"#eaffea",  /* green */
-	"#eeee9e",  /* yellow */
-	"#cceeff",  /* blue */
-	"#ffeaff",  /* magenta */
-	"#eaffff",  /* cyan */
-	"#ffffea",  /* white */
+	"#eaeaea",
+	"#ffeaea",
+	"#eaffea",
+	"#eeee9e",
+	"#cceeff",
+	"#ffeaff",
+	"#eaffff",
+	"#ffffea",
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#000000",  /* cursor */
-	"#ffffea",  /* reverse cursor */
 };
 
 
@@ -118,8 +117,8 @@ static const char *colorname[] = {
  */
 static unsigned int defaultfg = 0;
 static unsigned int defaultbg = 15;
-static unsigned int defaultcs = 256;
-static unsigned int defaultrcs = 257;
+static unsigned int defaultcs = 0;
+static unsigned int defaultrcs = 15;
 
 /*
  * Default shape of cursor
@@ -134,8 +133,8 @@ static unsigned int cursorshape = 2;
  * Default colour and shape of the mouse cursor
  */
 static unsigned int mouseshape = XC_xterm;
-static unsigned int mousefg = 7;
-static unsigned int mousebg = 0;
+static unsigned int mousefg = 0;
+static unsigned int mousebg = 15;
 
 /*
  * Colors used, when the specific fg == defaultfg. So in reverse mode this
@@ -169,9 +168,11 @@ static Shortcut shortcuts[] = {
 	{ MODKEY|ShiftMask,     XK_Home,        xzoomreset,     {.f =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ MODKEY|ShiftMask,     XK_Insert,      clippaste,      {.i =  0} },
-	{ MODKEY|ShiftMask,     XK_C,           clipcopy,       {.i =  0} },
-	{ MODKEY|ShiftMask,     XK_V,           clippaste,      {.i =  0} },
+	{ ControlMask|ShiftMask,XK_C,           clipcopy,       {.i =  0} },
+	{ ControlMask|ShiftMask,XK_V,           clippaste,      {.i =  0} },
 	{ MODKEY,               XK_Num_Lock,    numlock,        {.i =  0} },
+	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
+	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
 };
 
 /*
