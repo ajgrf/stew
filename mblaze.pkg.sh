@@ -1,4 +1,4 @@
 name=mblaze
-version=0.2
-source=("https://github.com/chneukirchen/mblaze/releases/download/v$version/mblaze-$version.tar.gz")
-cksum=(6611387eedb9d4b18df1ae761e36292b105f8bb58d561c71ebbf88158e8d0999)
+version=0.3.2
+source=("https://github.com/chneukirchen/mblaze/archive/v$version.tar.gz")
+cksum=(c402dc58c090a9a9b005f016773b44e22734ce0e40899294abdf2b8ec310b6f5)
