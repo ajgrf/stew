@@ -1,7 +1,7 @@
 name=go1.4-bootstrap
-version=20170531
+version=20171003
 source=("https://storage.googleapis.com/golang/go1.4-bootstrap-$version.tar.gz")
-cksum=(49f806f66762077861b7de7081f586995940772d29d4c45068c134441a743fa2)
+cksum=(f4ff5b5eb3a3cae1c993723f3eab519c5bae18866b5e5f96fe1102f0cb5c3e52)
 
 build_phase() {
 	export GOBIN=""
