@@ -1,7 +1,7 @@
 name=restic
-version=0.8.0
+version=0.8.3
 source=("https://github.com/restic/restic/releases/download/v$version/restic-$version.tar.gz")
-cksum=(7b4c65fae9cf9cb7ce70928fe6580fa9d077c425e1831958098ebc4537ae16c2)
+cksum=(0cf697c88404b180d6d6ff2e7d2c27b2fcb9536da6dbdf15ad4d320af7e8f17c)
 
 build_phase() {
 	go run build.go
