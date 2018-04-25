@@ -1,7 +1,7 @@
 name=entr
-version=3.6
+version=4.0
 source=("http://entrproject.org/code/entr-$version.tar.gz")
-cksum=(a42746d81c548d7e557d500f93422b8ec9731d719309eb2601b8be69ae0dc8eb)
+cksum=(4ad4fe9108b179199951cfc78a581a8a69602b073dae59bcae4b810f6e1f6c8b)
 
 configure_phase() {
 	./configure
