@@ -1,12 +1,13 @@
 name=st
-version=0.7
-source=("http://dl.suckless.org/st/st-$version.tar.gz" st.config.h \
-	"https://st.suckless.org/patches/solarized/st-no_bold_colors-0.7.diff" \
-	"https://st.suckless.org/patches/scrollback/st-scrollback-0.7.diff")
-cksum=(358bca5bfc6ee85352dcd4f45f13f78474e5de42  \
-	3d9e20c32d3773e8d17364397266c9f3db0e6f5d \
-	d089f953f091933fa867416648d497a87bde3461 \
-	f42d0b0ae25491792acbc6b3ffab025027957a13)
+version=0.8.1
+source=("http://dl.suckless.org/st/st-$version.tar.gz" \
+	st.config.h \
+	"https://st.suckless.org/patches/solarized/st-no_bold_colors-0.8.1.diff" \
+	"https://st.suckless.org/patches/scrollback/st-scrollback-0.8.diff")
+cksum=(c4fb0fe2b8d2d3bd5e72763e80a8ae05b7d44dbac8f8e3bb18ef0161c7266926 \
+	ef2129682b192ed3fa46d7e5a2d4791b6d197dcc2d3d7b6000f6c0f2f36ed63d \
+	5a6e2b745c7746228e0ee4e84214e3ac7054e6d451bc5843364e878bb2011e3b \
+	8279d347c70bc9b36f450ba15e1fd9ff62eedf49ce9258c35d7f1cfe38cca226)
 
 build_phase() {
 	patch -p1 < "$builddir/${source[2]##*/}"
