@@ -1,5 +1,4 @@
 name=vis
-revision=97694a796c9d54ea6647b12e7aafb41ac5546435
-version=20161130.97694a7
-source=("https://github.com/martanne/vis/archive/$revision.tar.gz")
-cksum=(352ba8a61fa4910504588176e4a296a679322054b9fdc8420b1585af93c3e00b)
+version=0.5
+source=("https://github.com/martanne/vis/releases/download/v$version/vis-v$version.tar.gz")
+cksum=(b6f617545e4e05e6c9a6187c9aa18ed62709b537ecb33d1941399ed9912d832b)
