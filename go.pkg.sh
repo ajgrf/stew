@@ -1,7 +1,7 @@
 name=go
-version=1.9.2
+version=1.10.1
 source=("https://storage.googleapis.com/golang/go$version.src.tar.gz")
-cksum=(665f184bf8ac89986cfd5a4460736976f60b57df6b320ad71ad4cef53bb143dc)
+cksum=(589449ff6c3ccbff1d391d4e7ab5bb5d5643a5a41a04c99315e55c16bbf73ddc)
 
 build_phase() {
 	export GOBIN="$pkgdir/bin"
