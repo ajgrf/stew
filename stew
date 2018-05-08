@@ -8,12 +8,12 @@ set -e
 
 # configuration
 prefix="$HOME/.local"
-pkgpath=.
+pkgpath="$HOME/src/stew/pkgs"
 
 stowdir="$prefix/stow"
 
 main() {
-	if test -f "$1.pkg.sh"; then
+	if test -f "$pkgpath/$1.pkg.sh"; then
 		(
 			name="$1"
 			pkgdir="$stowdir/$name"
