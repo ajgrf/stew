@@ -1,13 +1,10 @@
 name=rclone
 version=1.40
 depends=(go)
+gitrepo=("https://github.com/ncw/rclone@v${version}")
 
 unpack_phase() {
-	mkdir -p src/github.com/ncw
-	cd src/github.com/ncw
-	git clone https://github.com/ncw/rclone
-	cd ./rclone
-	git checkout "v$version"
+	gopathify github.com/ncw/rclone
 }
 
 build_phase() {

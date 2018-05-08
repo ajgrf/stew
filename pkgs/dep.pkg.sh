@@ -1,13 +1,10 @@
 name=dep
 version=0.4.1
 depends=(go)
+gitrepo=("https://github.com/golang/dep@v${version}")
 
 unpack_phase() {
-	mkdir -p src/github.com/golang
-	cd src/github.com/golang
-	git clone https://github.com/golang/dep
-	cd ./dep
-	git checkout "v$version"
+	gopathify github.com/golang/dep
 }
 
 install_phase() {

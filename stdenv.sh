@@ -165,6 +165,12 @@ extract() {
 	esac
 }
 
+gopathify() {
+	mkdir -p "src/${1%/*}"
+	mv "${1##*/}" "src/${1%/*}"
+	cd "src/$1"
+}
+
 configure_phase() {
 	# include suckless-style config.h file
 	if test -f "../$name.config.h"; then
