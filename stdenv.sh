@@ -36,7 +36,7 @@ download_phase() {
 		reporev="${repo##*@}"
 		git clone "$reponame" || true
 		cd "$repobase"
-		if test "$reporev"; then
+		if test "$reporev" != "$reponame"; then
 			git checkout "$reporev"
 		else
 			git pull
@@ -225,5 +225,5 @@ autosudo() {
 
 stow_phase() {
 	# autosudo chmod -R a-w $stowdir/$name-$version
-	autosudo stow -d "$stowdir" "$name-$version"
+	autosudo stow -d "$stowdir" "$name${version:+-$version}"
 }
