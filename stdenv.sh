@@ -29,6 +29,20 @@ download_phase() {
 			error 3 "could not verify integrity of file $(destname "${source[$i]}")"
 		fi
 	done
+
+	for repo in "${gitrepo[@]}"; do
+		reponame="${repo%@*}"
+		repobase=$(basename "$reponame" .git)
+		reporev="${repo##*@}"
+		git clone "$reponame" || true
+		cd "$repobase"
+		if test "$reporev"; then
+			git checkout "$reporev"
+		else
+			git pull
+		fi
+		cd ..
+	done
 }
 
 fetch() {
@@ -103,6 +117,11 @@ setup_phase() {
 	for file in "${source[@]}"; do
 		cp "$(destname "$file")" "$builddir"
 	done
+
+	for repo in "${gitrepo[@]}"; do
+		cp -R $(basename "${repo%@*}" .git) "$builddir"
+	done
+
 	cd "$builddir"
 
 	# set build flags
