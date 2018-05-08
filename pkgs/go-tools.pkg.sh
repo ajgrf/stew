@@ -1,7 +1,7 @@
 name=go-tools
-version=20161019.c6efba0
 revision=c6efba04dd0d931bb11cd7f556285fa3c9305398
 netrev=3bafa3320efdf0c95d056586aa9abdd05ad72ee1
+version=20161019.$(gitver "$revision")
 depends=(go)
 source=("https://github.com/golang/tools/archive/$revision.tar.gz" \
 	"https://github.com/golang/net/archive/$netrev.tar.gz")

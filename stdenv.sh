@@ -8,6 +8,11 @@ error() {
 	exit "$code"
 }
 
+# shorten a git revision for use in a version number
+gitver() {
+	echo "$1" | head -c7
+}
+
 download_phase() {
 	local cachedir
 	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
