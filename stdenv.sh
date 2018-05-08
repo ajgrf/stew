@@ -66,6 +66,12 @@ verify_cksum() {
 	test "$sum" = "$2"
 }
 
+depends_phase() {
+	for i in ${!depends[@]}; do
+		stew install "${depends[$i]}"
+	done
+}
+
 setup_phase() {
 	# work in temporary directory
 	if test -z "$TMPDIR"; then

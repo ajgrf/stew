@@ -1,5 +1,6 @@
 name=rclone
 version=1.40
+depends=(go)
 
 unpack_phase() {
 	mkdir -p src/github.com/ncw

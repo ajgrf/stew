@@ -26,6 +26,7 @@ stowdir="$prefix/stow"
 # phases that it calls.
 package() {
 	download_phase
+	depends_phase
 	setup_phase
 	unpack_phase
 	configure_phase

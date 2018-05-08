@@ -1,5 +1,6 @@
 name=hugo
 version=0.40.1
+depends=(go dep)
 
 unpack_phase() {
 	mkdir -p src/github.com/gohugoio

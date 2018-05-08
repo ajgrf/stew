@@ -1,5 +1,6 @@
 name=dep
 version=0.4.1
+depends=(go)
 
 unpack_phase() {
 	mkdir -p src/github.com/golang
