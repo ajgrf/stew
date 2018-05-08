@@ -25,7 +25,6 @@ stowdir="$prefix/stow"
 # normally override this function. Instead, you should override the individual
 # phases that it calls.
 package() {
-	. "$pkgpath/../stdenv.sh"
 	download_phase
 	setup_phase
 	unpack_phase
@@ -58,6 +57,7 @@ main() {
 				(
 					name="$1"
 					pkgdir="$stowdir/$name"
+					. "$pkgpath/../stdenv.sh"
 					. "$pkgpath/$1.pkg.sh"
 
 					# include $version in $pkgdir if it's defined

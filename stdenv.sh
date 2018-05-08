@@ -9,21 +9,41 @@ error() {
 }
 
 download_phase() {
+	local cachedir
+	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
+
 	if test ${#source[@]} -ne ${#cksum[@]}; then
 		error 3 "$name:" 'len($source) != len($cksum)'
 	fi
 
+	mkdir -p "$cachedir"
+	cd "$cachedir"
 	for i in ${!source[@]}; do
 		fetch "${source[$i]}"
-		if ! verify_cksum $(basename "${source[$i]}") "${cksum[$i]}"; then
-			error 3 "could not verify integrity of file $(basename "${source[$i]}")"
+		if ! verify_cksum $(destname "${source[$i]}") "${cksum[$i]}"; then
+			error 3 "could not verify integrity of file $(destname "${source[$i]}")"
 		fi
 	done
 }
 
 fetch() {
-	if ! test -f $(basename "$1"); then
-		curl -O -L "$1"
+	local src dest
+	src="${1%>*}"
+	dest=$(destname "$1")
+	if ! test -f "$dest"; then
+		echo "fetching $dest" >&2
+		curl -L "$src" > "$dest"
+	fi
+}
+
+destname() {
+	local dest
+	dest="${1##*/}"
+	dest="${dest##*>}"
+	if test -f "$pkgpath/$dest"; then
+		echo "$pkgpath/$dest"
+	else
+		echo "$dest"
 	fi
 }
 
@@ -60,7 +80,7 @@ setup_phase() {
 	builddir="$TMPDIR/stew.$$.$name-build"
 	mkdir "$builddir"
 	for file in "${source[@]}"; do
-		cp "$(basename "$file")" "$builddir"
+		cp "$(destname "$file")" "$builddir"
 	done
 	cd "$builddir"
 }
@@ -69,7 +89,7 @@ unpack_phase() {
 	for file in "${source[@]}"; do
 		case "$file" in
 		*.tar|*.tar.[gx]z|*.tar.bz2|*.t[bgx]z|*.tb2|*.tbz2|*.zip|*.7z)
-			extract "$(basename "$file")"
+			extract "$(destname "$file")"
 		esac
 	done
 
