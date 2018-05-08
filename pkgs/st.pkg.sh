@@ -1,5 +1,6 @@
 name=st
 version=0.8.1
+debdepends=(libx11-dev libxft-dev x11proto-core-dev)
 source=("http://dl.suckless.org/st/st-$version.tar.gz" \
 	st.config.h \
 	st.desktop \

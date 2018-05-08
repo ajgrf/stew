@@ -25,8 +25,8 @@ stowdir="$prefix/stow"
 # normally override this function. Instead, you should override the individual
 # phases that it calls.
 package() {
-	download_phase
 	depends_phase
+	download_phase
 	setup_phase
 	unpack_phase
 	configure_phase
