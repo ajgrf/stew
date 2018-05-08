@@ -10,7 +10,6 @@ unpack_phase() {
 }
 
 build_phase() {
-	export GOPATH="$builddir"
 	dep ensure
 	go build
 	./hugo gen man

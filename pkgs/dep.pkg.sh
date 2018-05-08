@@ -10,8 +10,6 @@ unpack_phase() {
 }
 
 install_phase() {
-	export GOPATH="$builddir"
-	export GOBIN="$pkgdir/bin"
 	mkdir -p "$pkgdir/bin"
 	go install ./cmd/dep
 }

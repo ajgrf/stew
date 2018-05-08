@@ -16,8 +16,5 @@ unpack_phase() {
 }
 
 install_phase() {
-	export GOBIN="$pkgdir/bin"
-	export GOPATH="$builddir"
-
 	go install golang.org/x/tools/cmd/...
 }

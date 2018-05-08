@@ -67,12 +67,6 @@ verify_cksum() {
 }
 
 setup_phase() {
-	# set build flags
-	eval "$(dpkg-buildflags --export=sh)"
-
-	export LD_RUN_PATH="$prefix/lib"
-	export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
-
 	# work in temporary directory
 	if test -z "$TMPDIR"; then
 		TMPDIR="/tmp"
@@ -83,6 +77,15 @@ setup_phase() {
 		cp "$(destname "$file")" "$builddir"
 	done
 	cd "$builddir"
+
+	# set build flags
+	eval "$(dpkg-buildflags --export=sh)"
+
+	export LD_RUN_PATH="$prefix/lib"
+	export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
+
+	export GOBIN="$pkgdir/bin"
+	export GOPATH="$builddir"
 }
 
 unpack_phase() {

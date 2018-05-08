@@ -10,7 +10,6 @@ unpack_phase() {
 }
 
 build_phase() {
-	export GOPATH="$builddir"
 	go build
 }
 
