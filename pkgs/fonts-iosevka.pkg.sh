@@ -1,4 +1,4 @@
 name=fonts-iosevka
-version=1.14.1
+version=1.14.2
 source=("https://github.com/be5invis/Iosevka/releases/download/v$version/iosevka-pack-$version.zip")
-cksum=(41d35e3ac2fce0cfc9b549e26d5d7a8246d264388cf5ae3038651a306d2d2280)
+cksum=(50521c7fa9707f6e03493b7362c65eba94e29f1c738d2605d3d58758e32942f4)
