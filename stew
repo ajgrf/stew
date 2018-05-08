@@ -42,9 +42,9 @@ usage() {
 
 		The commands are:
 
-		    install     install a package
+		    add         install a package
 		    list        list all installed stew packages
-		    uninstall   uninstall a package
+		    remove      uninstall a package
 
 	EOF
 	exit 2
@@ -52,38 +52,53 @@ usage() {
 
 main() {
 	case "$1" in
-		install)
+		add)
 			shift
-			if test -f "$pkgpath/$1.pkg.sh"; then
-				(
-					name="$1"
-					pkgdir="$stowdir/$name"
-					. "$pkgpath/../stdenv.sh"
-					. "$pkgpath/$1.pkg.sh"
-
-					# include $version in $pkgdir if it's defined
-					if test "$version"; then
-						pkgdir="$stowdir/$name-$version"
-					fi
-
-					# finally run the package function
-					if ! test -d "$pkgdir"; then
-						package
-					fi
-				)
-			fi
+			for pkg; do
+				stew_install "$pkg"
+			done
 			;;
-		list)
+		list|ls)
 			ls -1 "$stowdir"
 			;;
-		uninstall)
+		remove|rm)
 			shift
-			stow -d "$stowdir" -D "$1" && rm -rf "$stowdir/$1"
+			for pkg; do
+				stew_remove "$pkg"
+			done
 			;;
 		*)
 			usage
 			;;
 	esac
 }
+
+stew_install() (
+	if test -f "$pkgpath/$1.pkg.sh"; then
+		name="$1"
+		. "$pkgpath/../stdenv.sh"
+		. "$pkgpath/$1.pkg.sh"
+		pkgdir="$stowdir/$name${version:+-$version}"
+
+		# finally run the package function
+		if ! test -d "$pkgdir"; then
+			package
+		fi
+	fi
+)
+
+stew_remove() (
+	cd "$stowdir"
+	if test -d "$1"; then
+		pkgname="$1"
+	elif test -f "$pkgpath/$1.pkg.sh"; then
+		name="$1"
+		. "$pkgpath/../stdenv.sh"
+		. "$pkgpath/$1.pkg.sh"
+		pkgname="$name${version:+-$version}"
+	fi
+	stow -D "$pkgname"
+	rm -r "$pkgname"
+)
 
 main "$@"
