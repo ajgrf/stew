@@ -119,6 +119,7 @@ setup_phase() {
 	# set build flags
 	eval "$(dpkg-buildflags --export=sh)"
 
+	export CPATH="$prefix/include"
 	export LD_RUN_PATH="$prefix/lib"
 	export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
 
@@ -171,7 +172,7 @@ configure_phase() {
 
 	if test -x configure; then
 		if test ${#configureflags[@]} -eq 0; then
-			configureflags=("--prefix=${prefix}")
+			configureflags=("--prefix=${pkgdir}")
 		fi
 		./configure "${configureflags[@]}"
 	fi
