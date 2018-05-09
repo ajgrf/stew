@@ -109,7 +109,10 @@ setup_phase() {
 	done
 
 	for repo in "${gitrepo[@]}"; do
-		cp -R $(basename "${repo%@*}" .git) "$builddir"
+		gitpath=$(basename "${repo%@*}" .git)
+		mkdir -p "$builddir/$gitpath"
+		git -C "$gitpath" archive HEAD | tar -x -C "$builddir/$gitpath"
+		unset gitpath
 	done
 
 	cd "$builddir"
