@@ -1,13 +1,3 @@
-# exit codes:
-# 2 usage error
-# 3 packaging error
-error() {
-	local code="$1"
-	shift
-	echo stew: "$@" >&2
-	exit "$code"
-}
-
 # shorten a git revision for use in a version number
 gitver() {
 	echo "$1" | head -c7

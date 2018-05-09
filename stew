@@ -88,6 +88,8 @@ stew_install() (
 		if ! test -d "$pkgdir"; then
 			package
 		fi
+	else
+		error 3 "package $1 not found in $pkgpath"
 	fi
 )
 
@@ -104,5 +106,15 @@ stew_remove() (
 	stow -D "$pkgname"
 	rm -r "$pkgname"
 )
+
+# exit codes:
+# 2 usage error
+# 3 packaging error
+error() {
+	local code="$1"
+	shift
+	echo stew: "$@" >&2
+	exit "$code"
+}
 
 main "$@"
