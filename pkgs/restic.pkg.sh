@@ -9,7 +9,7 @@ build_phase() {
 }
 
 install_phase() {
-	mkdir -p "$pkgdir/bin" "$pkgdir/share/man/man1"
+	mkdir -p "$pkgdir/bin" "$mandir/man1"
 	cp restic "$pkgdir/bin"
-	cp -t "$pkgdir/share/man/man1" doc/man/*.1
+	cp -t "$mandir/man1" doc/man/*.1
 }

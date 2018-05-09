@@ -114,6 +114,8 @@ setup_phase() {
 
 	cd "$builddir"
 
+	mandir="$pkgdir/share/man"
+
 	# set build flags
 	eval "$(dpkg-buildflags --export=sh)"
 

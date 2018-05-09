@@ -14,7 +14,7 @@ build_phase() {
 }
 
 install_phase() {
-	mkdir -p "$pkgdir/bin" "$pkgdir/share/man/man1"
+	mkdir -p "$pkgdir/bin" "$mandir/man1"
 	cp hugo "$pkgdir/bin"
-	cp ./man/*.1 "$pkgdir/share/man/man1"
+	cp ./man/*.1 "$mandir/man1"
 }

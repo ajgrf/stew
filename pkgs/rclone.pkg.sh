@@ -12,7 +12,7 @@ build_phase() {
 }
 
 install_phase() {
-	mkdir -p "$pkgdir/bin" "$pkgdir/share/man/man1"
+	mkdir -p "$pkgdir/bin" "$mandir/man1"
 	cp rclone "$pkgdir/bin"
-	cp rclone.1 "$pkgdir/share/man/man1"
+	cp rclone.1 "$mandir/man1"
 }
