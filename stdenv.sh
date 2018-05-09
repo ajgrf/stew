@@ -3,6 +3,28 @@ gitver() {
 	echo "$1" | head -c7
 }
 
+depends_phase() {
+	local stewprereqs
+	stewprereqs=(build-essential stow curl git)
+
+	for stewdep in "${depends[@]}"; do
+		stew add "$stewdep"
+	done
+
+	for debdep in "${stewprereqs[@]}" "${debdepends[@]}"; do
+		if ! deb_is_installed "$debdep"; then
+			sudo apt install "${stewprereqs[@]}" "${debdepends[@]}"
+			break
+		fi
+	done
+}
+
+deb_is_installed() {
+	if type dpkg >/dev/null 2>&1; then
+		dpkg -s "$1" >/dev/null 2>&1
+	fi
+}
+
 download_phase() {
 	local cachedir
 	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
@@ -73,28 +95,6 @@ verify_cksum() {
 	esac
 
 	test "$sum" = "$2"
-}
-
-depends_phase() {
-	local stewprereqs
-	stewprereqs=(build-essential stow curl git)
-
-	for stewdep in "${depends[@]}"; do
-		stew add "$stewdep"
-	done
-
-	for debdep in "${stewprereqs[@]}" "${debdepends[@]}"; do
-		if ! deb_is_installed "$debdep"; then
-			sudo apt install "${stewprereqs[@]}" "${debdepends[@]}"
-			break
-		fi
-	done
-}
-
-deb_is_installed() {
-	if type dpkg >/dev/null 2>&1; then
-		dpkg -s "$1" >/dev/null 2>&1
-	fi
 }
 
 setup_phase() {
