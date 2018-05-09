@@ -52,13 +52,13 @@ usage() {
 
 main() {
 	case "$1" in
-		add)
+		add|install)
 			shift
 			for pkg; do
 				stew_install "$pkg"
 			done
 			;;
-		list|ls)
+		list|ls|"")
 			ls -1 "$stowdir"
 			;;
 		remove|rm)
@@ -68,7 +68,11 @@ main() {
 			done
 			;;
 		*)
-			usage
+			if test -f "$pkgpath/$1.pkg.sh"; then
+				main add "$@"
+			else
+				usage
+			fi
 			;;
 	esac
 }
