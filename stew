@@ -25,15 +25,17 @@ stowdir="$prefix/stow"
 # normally override this function. Instead, you should override the individual
 # phases that it calls.
 package() {
-	depends_phase
-	download_phase
-	setup_phase
-	unpack_phase
-	configure_phase
-	build_phase
-	install_phase
-	cleanup_phase
-	stow_phase
+	phases=(depends download setup unpack patch configure build test
+		install cleanup stow)
+
+	for phase in "${phases[@]}"; do
+		for subphase in "pre${phase}" "${phase}" "post${phase}"; do
+			if type "${subphase}_phase" >/dev/null 2>&1; then
+				echo "Starting $name${version:+ $version} $subphase phase"
+				"${subphase}_phase"
+			fi
+		done
+	done
 }
 
 usage() {
