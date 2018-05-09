@@ -1,6 +1,6 @@
 name=newsboat
 version=2.11.1
-debdepends=(libncursesw5-dev libxml2-dev libstfl-dev libsqlite3-dev \
+aptdepends=(libncursesw5-dev libxml2-dev libstfl-dev libsqlite3-dev \
 	perl pkg-config libcurl4-gnutls-dev libjson-c-dev asciidoc  \
 	libxml2-utils xsltproc docbook-xml docbook-xsl)
 source=("https://newsboat.org/releases/$version/newsboat-$version.tar.xz")

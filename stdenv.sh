@@ -11,9 +11,9 @@ depends_phase() {
 		stew add "$stewdep"
 	done
 
-	for debdep in "${stewprereqs[@]}" "${debdepends[@]}"; do
-		if ! deb_is_installed "$debdep"; then
-			sudo apt install "${stewprereqs[@]}" "${debdepends[@]}"
+	for aptdep in "${stewprereqs[@]}" "${aptdepends[@]}"; do
+		if ! deb_is_installed "$aptdep"; then
+			sudo apt install "${stewprereqs[@]}" "${aptdepends[@]}"
 			break
 		fi
 	done
