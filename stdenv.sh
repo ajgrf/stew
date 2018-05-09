@@ -29,15 +29,15 @@ download_phase() {
 	local cachedir
 	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
 
-	if test ${#source[@]} -ne ${#cksum[@]}; then
-		error 3 "$name:" 'len($source) != len($cksum)'
+	if test ${#source[@]} -ne ${#sum[@]}; then
+		error 3 "$name:" 'len($source) != len($sum)'
 	fi
 
 	mkdir -p "$cachedir"
 	cd "$cachedir"
 	for i in ${!source[@]}; do
 		fetch "${source[$i]}"
-		if ! verify_cksum $(destname "${source[$i]}") "${cksum[$i]}"; then
+		if ! verify_sum $(destname "${source[$i]}") "${sum[$i]}"; then
 			error 3 "could not verify integrity of file $(destname "${source[$i]}")"
 		fi
 	done
@@ -78,8 +78,8 @@ destname() {
 	fi
 }
 
-# `verify_cksum file sum` returns null (a.k.a. true) only if file matches sum
-verify_cksum() {
+# `verify_sum file sum` returns null (a.k.a. true) only if file matches sum
+verify_sum() {
 	local hashlen sum
 	hashlen=$(echo -n "$2" | wc -c)
 
