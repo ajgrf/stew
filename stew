@@ -7,12 +7,12 @@ set -e
 # need to write if you wanted to automate your stow installations.
 
 # configuration
-prefix="$HOME/.local"
-pkgpath="$HOME/src/stew/pkgs"
+STEWPREFIX="${STEWPREFIX:-$HOME/.local}"
+STEWPKGS="${STEWPKGS:-$HOME/src/stew/pkgs}"
 
 # A stew package is a shell script with the following properties:
 #
-#   * lives in a file named $name.pkg.sh in a directory in $pkgpath
+#   * lives in a file named $name.pkg.sh in a directory in $STEWPKGS
 #   * consists only of function and variable definitions (when run or sourced
 #     it does nothing on its own)
 #   * defines a `package` function which installs the software into $pkgdir
@@ -42,7 +42,7 @@ main() {
 			done
 			;;
 		list|ls|"")
-			ls -1 "$prefix/stow"
+			ls -1 "$STEWPREFIX/stow"
 			;;
 		remove|rm)
 			shift
@@ -51,7 +51,7 @@ main() {
 			done
 			;;
 		*)
-			if test -f "$pkgpath/$1.pkg.sh"; then
+			if test -f "$STEWPKGS/$1.pkg.sh"; then
 				main add "$@"
 			else
 				usage
@@ -61,29 +61,29 @@ main() {
 }
 
 stew_install() (
-	if test -f "$pkgpath/$1.pkg.sh"; then
+	if test -f "$STEWPKGS/$1.pkg.sh"; then
 		name="$1"
 		use stdenv
-		. "$pkgpath/$1.pkg.sh"
-		pkgdir="$prefix/stow/$name${version:+-$version}"
+		. "$STEWPKGS/$1.pkg.sh"
+		pkgdir="$STEWPREFIX/stow/$name${version:+-$version}"
 
 		# finally run the package function
 		if ! test -d "$pkgdir"; then
 			package
 		fi
 	else
-		error 3 "package $1 not found in $pkgpath"
+		error 3 "package $1 not found in $STEWPKGS"
 	fi
 )
 
 stew_remove() (
-	cd "$prefix/stow"
+	cd "$STEWPREFIX/stow"
 	if test -d "$1"; then
 		pkgname="$1"
-	elif test -f "$pkgpath/$1.pkg.sh"; then
+	elif test -f "$STEWPKGS/$1.pkg.sh"; then
 		name="$1"
 		use stdenv
-		. "$pkgpath/$1.pkg.sh"
+		. "$STEWPKGS/$1.pkg.sh"
 		pkgname="$name${version:+-$version}"
 	fi
 	stow -D "$pkgname"
@@ -101,7 +101,7 @@ error() {
 }
 
 use() {
-	. "$pkgpath/../$1.sh"
+	. "$STEWPKGS/../$1.sh"
 }
 
 main "$@"

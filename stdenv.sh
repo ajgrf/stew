@@ -2,6 +2,8 @@
 # normally override this function. Instead, you should override the individual
 # phases that it calls.
 package() {
+	prefix="$STEWPREFIX"
+
 	phases=(depends download setup unpack patch configure build test
 		install cleanup stow)
 
@@ -95,8 +97,8 @@ destname() {
 	local dest
 	dest="${1##*/}"
 	dest="${dest##*>}"
-	if test -f "$pkgpath/$dest"; then
-		echo "$pkgpath/$dest"
+	if test -f "$STEWPKGS/$dest"; then
+		echo "$STEWPKGS/$dest"
 	else
 		echo "$dest"
 	fi
