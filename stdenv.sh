@@ -244,6 +244,6 @@ autosudo() {
 }
 
 stow_phase() {
-	# autosudo chmod -R a-w $stowdir/$name-$version
-	autosudo stow -d "$stowdir" "$name${version:+-$version}"
+	# autosudo chmod -R a-w $prefix/stow/$name-$version
+	autosudo stow -d "$prefix/stow" "$name${version:+-$version}"
 }

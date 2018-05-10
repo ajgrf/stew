@@ -9,7 +9,6 @@ set -e
 # configuration
 prefix="$HOME/.local"
 pkgpath="$HOME/src/stew/pkgs"
-stowdir="$prefix/stow"
 
 # A stew package is a shell script with the following properties:
 #
@@ -43,7 +42,7 @@ main() {
 			done
 			;;
 		list|ls|"")
-			ls -1 "$stowdir"
+			ls -1 "$prefix/stow"
 			;;
 		remove|rm)
 			shift
@@ -66,7 +65,7 @@ stew_install() (
 		name="$1"
 		use stdenv
 		. "$pkgpath/$1.pkg.sh"
-		pkgdir="$stowdir/$name${version:+-$version}"
+		pkgdir="$prefix/stow/$name${version:+-$version}"
 
 		# finally run the package function
 		if ! test -d "$pkgdir"; then
@@ -78,7 +77,7 @@ stew_install() (
 )
 
 stew_remove() (
-	cd "$stowdir"
+	cd "$prefix/stow"
 	if test -d "$1"; then
 		pkgname="$1"
 	elif test -f "$pkgpath/$1.pkg.sh"; then
