@@ -19,24 +19,7 @@ stowdir="$prefix/stow"
 #     it does nothing on its own)
 #   * defines a `package` function which installs the software into $pkgdir
 #     and runs stow on it 
-#   * inherits the default implementation below
-
-# This is the default implementation of the `package` function. You should not
-# normally override this function. Instead, you should override the individual
-# phases that it calls.
-package() {
-	phases=(depends download setup unpack patch configure build test
-		install cleanup stow)
-
-	for phase in "${phases[@]}"; do
-		for subphase in "pre${phase}" "${phase}" "post${phase}"; do
-			if type "${subphase}_phase" >/dev/null 2>&1; then
-				echo "Starting $name${version:+ $version} $subphase phase"
-				"${subphase}_phase"
-			fi
-		done
-	done
-}
+#   * inherits a default implementation from stdenv.sh
 
 usage() {
 	cat <<-EOF 1>&2
