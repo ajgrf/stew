@@ -105,7 +105,11 @@ error() {
 }
 
 use() {
-	. "$STEWPKGS/../$1.sh"
+	for dir in . "$STEWPREFIX/lib/stew"; do
+		if test -f "$dir/$1.sh"; then
+			. "$dir/$1.sh"
+		fi
+	done
 }
 
 main "$@"
