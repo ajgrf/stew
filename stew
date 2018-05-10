@@ -9,6 +9,7 @@ set -e
 # configuration
 prefix="$HOME/.local"
 pkgpath="$HOME/src/stew/pkgs"
+libdir="$pkgpath/.."
 
 stowdir="$prefix/stow"
 
@@ -65,7 +66,7 @@ main() {
 stew_install() (
 	if test -f "$pkgpath/$1.pkg.sh"; then
 		name="$1"
-		. "$pkgpath/../stdenv.sh"
+		use stdenv
 		. "$pkgpath/$1.pkg.sh"
 		pkgdir="$stowdir/$name${version:+-$version}"
 
@@ -84,7 +85,7 @@ stew_remove() (
 		pkgname="$1"
 	elif test -f "$pkgpath/$1.pkg.sh"; then
 		name="$1"
-		. "$pkgpath/../stdenv.sh"
+		use stdenv
 		. "$pkgpath/$1.pkg.sh"
 		pkgname="$name${version:+-$version}"
 	fi
@@ -100,6 +101,10 @@ error() {
 	shift
 	echo stew: "$@" >&2
 	exit "$code"
+}
+
+use() {
+	. "$libdir/$1.sh"
 }
 
 main "$@"
