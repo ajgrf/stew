@@ -89,6 +89,8 @@ stew_remove() (
 	if test "$pkgname"; then
 		stow -d "$STEWPREFIX/stow" -D "$pkgname"
 		rm -r "$STEWPREFIX/stow/$pkgname"
+	else
+		error 3 "could not find package $1 to remove"
 	fi
 )
 
