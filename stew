@@ -8,7 +8,7 @@ set -e
 
 # configuration
 STEWPREFIX="${STEWPREFIX:-$HOME/.local}"
-STEWPKGS="${STEWPKGS:-$HOME/src/stew/pkgs}"
+STEWPKGS="${STEWPKGS:-.}"
 
 # A stew package is a shell script with the following properties:
 #
@@ -77,8 +77,7 @@ stew_install() (
 )
 
 stew_remove() (
-	cd "$STEWPREFIX/stow"
-	if test -d "$1"; then
+	if test -d "$STEWPREFIX/stow/$1"; then
 		pkgname="$1"
 	elif test -f "$STEWPKGS/$1.pkg.sh"; then
 		name="$1"
@@ -86,8 +85,11 @@ stew_remove() (
 		. "$STEWPKGS/$1.pkg.sh"
 		pkgname="$name${version:+-$version}"
 	fi
-	stow -D "$pkgname"
-	rm -r "$pkgname"
+
+	if test "$pkgname"; then
+		stow -d "$STEWPREFIX/stow" -D "$pkgname"
+		rm -r "$STEWPREFIX/stow/$pkgname"
+	fi
 )
 
 # exit codes:
