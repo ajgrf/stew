@@ -9,8 +9,6 @@ set -e
 # configuration
 prefix="$HOME/.local"
 pkgpath="$HOME/src/stew/pkgs"
-libdir="$pkgpath/.."
-
 stowdir="$prefix/stow"
 
 # A stew package is a shell script with the following properties:
@@ -104,7 +102,7 @@ error() {
 }
 
 use() {
-	. "$libdir/$1.sh"
+	. "$pkgpath/../$1.sh"
 }
 
 main "$@"
