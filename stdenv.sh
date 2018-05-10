@@ -3,6 +3,9 @@
 # phases that it calls.
 package() {
 	prefix="$STEWPREFIX"
+	builddir="${TMPDIR:-/tmp}/stew.$$.$name-build"
+	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
+	mandir="$pkgdir/share/man"
 
 	phases=(depends download setup unpack patch configure build test
 		install cleanup stow)
@@ -45,9 +48,6 @@ deb_is_installed() {
 }
 
 download_phase() {
-	local cachedir
-	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
-
 	if test ${#source[@]} -ne ${#sum[@]}; then
 		error 3 "$name:" 'len($source) != len($sum)'
 	fi
@@ -125,10 +125,6 @@ verify_sum() {
 
 setup_phase() {
 	# work in temporary directory
-	if test -z "$TMPDIR"; then
-		TMPDIR="/tmp"
-	fi
-	builddir="$TMPDIR/stew.$$.$name-build"
 	mkdir "$builddir"
 	for file in "${source[@]}"; do
 		cp "$(destname "$file")" "$builddir"
@@ -142,8 +138,6 @@ setup_phase() {
 	done
 
 	cd "$builddir"
-
-	mandir="$pkgdir/share/man"
 
 	# set build flags
 	eval "$(dpkg-buildflags --export=sh)"
