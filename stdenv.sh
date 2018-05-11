@@ -30,7 +30,7 @@ depends_phase() {
 	stewprereqs=(build-essential stow curl git)
 
 	for stewdep in "${depends[@]}"; do
-		stew add "$stewdep"
+		stew "$stewdep"
 	done
 
 	for aptdep in "${stewprereqs[@]}" "${aptdepends[@]}"; do

@@ -20,44 +20,28 @@ STEWPKGS="${STEWPKGS:-.}"
 #   * inherits a default implementation from stdenv.sh
 
 usage() {
-	cat <<-EOF 1>&2
-		usage: stew <command> [<args>]
-
-		The commands are:
-
-		    add         install a package
-		    list        list all installed stew packages
-		    remove      uninstall a package
-
-	EOF
+	echo "usage: stew [-ilr] [pkg ...]" >&2
 	exit 2
 }
 
 main() {
-	case "$1" in
-		add|install)
-			shift
-			for pkg; do
-				stew_install "$pkg"
-			done
-			;;
-		list|ls|"")
-			ls -1 "$STEWPREFIX/stow"
-			;;
-		remove|rm)
-			shift
-			for pkg; do
-				stew_remove "$pkg"
-			done
-			;;
-		*)
-			if test -f "$STEWPKGS/$1.pkg.sh"; then
-				main add "$@"
-			else
-				usage
-			fi
-			;;
-	esac
+	local action
+
+	if test $# -eq 0; then
+		main -l
+	fi
+
+	action=stew_install
+	while test $# -gt 0; do
+		case "$1" in
+			-i) action=stew_install ;;
+			-l) stew_list; exit ;;
+			-r) action=stew_remove ;;
+			-*) usage ;;
+			*)  "$action" "$1" ;;
+		esac
+		shift
+	done
 }
 
 stew_install() (
@@ -75,6 +59,10 @@ stew_install() (
 		error 3 "package $1 not found in $STEWPKGS"
 	fi
 )
+
+stew_list() {
+	ls -1 "$STEWPREFIX/stow"
+}
 
 stew_remove() (
 	if test -d "$STEWPREFIX/stow/$1"; then
