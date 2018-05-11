@@ -57,7 +57,7 @@ into
 `STEWPREFIX`,
 run the following command from the source directory:
 
-	$ STEWPKGS=. ./stew stew
+	$ make install
 
 Then make sure
 *$STEWPREFIX/bin*
