@@ -1,3 +1,8 @@
+name=stew
+version=$(git show --no-patch --date=format:%Y%m%d --format=%cd.%h HEAD)
+homepage="https://github.com/ajgrf/stew"
+description="simple package manager using GNU Stow"
+
 unset -f download_phase
 unset -f setup_phase
 unset -f unpack_phase
