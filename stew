@@ -1,4 +1,4 @@
-#!/bin/mksh
+#!/bin/bash
 set -e
 
 # Stew is a simple package manager for installing software outside of your

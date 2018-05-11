@@ -1,6 +1,6 @@
-download_phase() :
-setup_phase() :
-unpack_phase() :
+unset -f download_phase
+unset -f setup_phase
+unset -f unpack_phase
 
 install_phase() {
 	mkdir -p "$pkgdir/bin" "$pkgdir/lib/stew" "$mandir/man1"
