@@ -130,6 +130,6 @@ it may not yet be usable outside of Debian-based systems.
 
 No effort has been made to secure
 **stew**.
-You not use it with untrusted input!
+You should not use it with untrusted input!
 
 Linux 4.16.0-0.bpo.1-amd64 - May 11, 2018
