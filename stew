@@ -20,7 +20,7 @@ STEWPKGS="${STEWPKGS:-.}"
 #   * inherits a default implementation from stdenv.sh
 
 usage() {
-	echo "usage: stew [-ilr] [pkg ...]" >&2
+	echo "usage: stew [-ilrs] [pkg ...]" >&2
 	exit 2
 }
 
@@ -37,6 +37,7 @@ main() {
 			-i) action=stew_install ;;
 			-l) stew_list; exit ;;
 			-r) action=stew_remove ;;
+			-s) shift; stew_search "$@"; exit ;;
 			-*) usage ;;
 			*)  "$action" "$1" ;;
 		esac
@@ -81,6 +82,27 @@ stew_remove() (
 		error 3 "could not find package $1 to remove"
 	fi
 )
+
+stew_search() {
+	for file in "$STEWPKGS"/*.pkg.sh; do (
+		name="${file%*.pkg.sh}"
+		use stdenv
+		. "$file"
+		info="${name}${version:+-$version}${homepage:+ ($homepage)}${description:+ - $description}"
+
+		matches=1
+		for pattern; do
+			if ! echo "$info" | grep -q -e "$pattern"; then
+				matches=0
+				break
+			fi
+		done
+
+		if test "$matches" -eq 1; then
+			echo "$info"
+		fi
+	) done
+}
 
 # exit codes:
 # 2 usage error
