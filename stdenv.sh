@@ -82,14 +82,7 @@ fetch() {
 	dest=$(destname "$1")
 	if ! test -f "$dest"; then
 		echo "fetching $dest" >&2
-		case "$src" in
-			gogdownloader://*)
-				lgogdownloader --download-file "$src"
-				;;
-			*)
-				curl -L "$src" > "$dest"
-				;;
-		esac
+		curl -L "$src" > "$dest"
 	fi
 }
 
