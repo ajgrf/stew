@@ -1,135 +1,115 @@
 STEW(1) - General Commands Manual
 
-# NAME
+NAME
+====
 
 **stew** - manage software with GNU Stow
 
-# SYNOPSIS
+SYNOPSIS
+========
 
-**stew**
-\[**-ilrs**]
-\[*pkg&nbsp;...*]
+**stew** \[**-ilrs**\] \[*pkg&nbsp;...*\]
 
-# DESCRIPTION
+DESCRIPTION
+===========
 
-**stew**
-is a simple package manager for installing software
-outside of your distribution's repositories.
-It leverages the excellent
-stow(8)
-utility to manage software,
-but alleviates much of the boilerplate you might otherwise
-need to write if you wanted to automate your stow installations.
+**stew** is a simple package manager for installing software outside of your distribution's repositories. It leverages the excellent stow(8) utility to manage software, but alleviates much of the boilerplate you might otherwise need to write if you wanted to automate your stow installations.
 
 The operations are as follows:
 
 **-i**
 
-> Install the specified packages.
-> This is the default operation when a valid package name is specified.
+> Install the specified packages. This is the default operation when a valid package name is specified.
 
 **-l**
 
-> List installed packages.
-> This is the default operation when no packages are specified.
+> List installed packages. This is the default operation when no packages are specified.
 
 **-r**
 
-> Remove the specified packages.
-> If
-> **stew**
-> can't find the corresponding package definition in
-> `STEWPKGS`,
-> you may need to specify the version number as well.
+> Remove the specified packages. If **stew** can't find the corresponding package definition in `STEWPKGS`, you may need to specify the version number as well.
 
 **-s**
 
 > Search available packages.
 
-For documentation on creating your own packages, see
-stew(5).
+For documentation on creating your own packages, see stew(5).
 
-# INSTALLATION
+INSTALLATION
+============
 
-To install
-**stew**
-into
-`STEWPREFIX`,
-run the following command from the source directory:
+To install **stew** into `STEWPREFIX`, run the following command from the source directory:
 
-	$ make install
+```
+$ make install
+```
 
-Then make sure
-*$STEWPREFIX/bin*
-is in your
-`PATH`.
+Then make sure *$STEWPREFIX/bin* is in your `PATH`.
 
-# ENVIRONMENT
+ENVIRONMENT
+===========
 
 `STEWPKGS`
 
-> Search for package definitions in this directory,
-> (defaults to the current directory).
+> Search for package definitions in this directory, (defaults to the current directory).
 
 `STEWPREFIX`
 
-> Install software under this directory
-> (defaults to *~/.local*).
+> Install software under this directory (defaults to *~/.local*).
 
-# EXIT STATUS
+EXIT STATUS
+===========
 
 The **stew** utility exits&#160;0 on success, and&#160;&gt;0 if an error occurs.
 
-# EXAMPLES
+EXAMPLES
+========
 
-Install the
-`hello`
-package:
+Install the `hello` package:
 
-	$ stew hello
+```
+$ stew hello
+```
 
-Remove the
-`hello`
-package:
+Remove the `hello` package:
 
-	$ stew -r hello
+```
+$ stew -r hello
+```
 
-Upgrade the
-`hello`
-package to a new version
-(an uninstall operation followed by an install):
+Upgrade the `hello` package to a new version (an uninstall operation followed by an install):
 
-	$ stew -r hello-2.9 -i hello
+```
+$ stew -r hello-2.9 -i hello
+```
 
 List installed packages:
 
-	$ stew
+```
+$ stew
+```
 
-Search available packages matching the pattern
-'go':
+Search available packages matching the pattern 'go':
 
-	$ stew -s go
+```
+$ stew -s go
+```
 
-# SEE ALSO
+SEE ALSO
+========
 
-stew(5),
-stow(8)
+stew(5), stow(8)
 
-# AUTHORS
+AUTHORS
+=======
 
-Written by
-Alex Griffin
-&lt;[a@ajgrf.com](mailto:a@ajgrf.com)&gt;,
-and licensed under the ISC license.
-See the LICENSE file for details.
+Written by Alex Griffin &lt;[a@ajgrf.com](mailto:a@ajgrf.com)&gt;, and licensed under the ISC license. See the LICENSE file for details.
 
-# BUGS
+BUGS
+====
 
-Although stew's design should work fine under a variety of environments,
-it may not yet be usable outside of Debian-based systems.
+Although stew's design should work fine under a variety of environments, it may not yet be usable outside of Debian-based systems.
 
-No effort has been made to secure
-**stew**.
-You should not use it with untrusted input!
+No effort has been made to secure **stew**. You should not use it with untrusted input!
 
 Linux 4.16.0-0.bpo.1-amd64 - May 11, 2018

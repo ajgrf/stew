@@ -6,7 +6,7 @@ options:
 	@echo "STEWPREFIX = ${STEWPREFIX}"
 
 README.md: stew.1
-	@mandoc -T markdown $< > $@
+	@mandoc -T markdown $< | markdownfmt > $@
 
 install: options
 	@echo "installing under ${STEWPREFIX}"
