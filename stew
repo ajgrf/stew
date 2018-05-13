@@ -92,7 +92,7 @@ stew_search() {
 
 		matches=1
 		for pattern; do
-			if ! echo "$info" | grep -q -e "$pattern"; then
+			if ! echo "$info" | grep -q -i -e "$pattern"; then
 				matches=0
 				break
 			fi
