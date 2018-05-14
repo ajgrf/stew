@@ -146,9 +146,6 @@ setup_phase() {
 	export CPATH="$prefix/include"
 	export LD_RUN_PATH="$prefix/lib"
 	export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
-
-	export GOBIN="$pkgdir/bin"
-	export GOPATH="$builddir"
 }
 
 unpack_phase() {
@@ -187,12 +184,6 @@ extract() {
 		7z x "$1"
 		;;
 	esac
-}
-
-gopathify() {
-	mkdir -p "src/${1%/*}"
-	mv "${1##*/}" "src/${1%/*}"
-	cd "src/$1"
 }
 
 configure_phase() {
