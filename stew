@@ -77,7 +77,10 @@ stew_remove() (
 stew_search() {
 	for file in "$STEWPKGS"/*.pkg.sh; do (
 		use_package "$file"
-		info="${name}${version:+-$version}${homepage:+ ($homepage)}${description:+ - $description}"
+		if test -d "$pkgdir"; then
+			installed=1
+		fi
+		info="${name}${version:+-$version}${installed:= [installed]}${description:+ - $description}"
 
 		matches=1
 		for pattern; do
