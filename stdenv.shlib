@@ -82,7 +82,7 @@ fetch() {
 	dest=$(destname "$1")
 	if ! test -f "$dest"; then
 		echo "fetching $dest" >&2
-		curl -L "$src" > "$dest"
+		curl -L "$src" >"$dest"
 	fi
 }
 
@@ -104,13 +104,17 @@ verify_sum() {
 
 	case "$hashlen" in
 	32)
-		sum=$(md5sum "$1" | cut -d ' ' -f 1) ;;
+		sum=$(md5sum "$1" | cut -d ' ' -f 1)
+		;;
 	40)
-		sum=$(sha1sum "$1" | cut -d ' ' -f 1) ;;
+		sum=$(sha1sum "$1" | cut -d ' ' -f 1)
+		;;
 	64)
-		sum=$(sha256sum "$1" | cut -d ' ' -f 1) ;;
+		sum=$(sha256sum "$1" | cut -d ' ' -f 1)
+		;;
 	128)
-		sum=$(sha512sum "$1" | cut -d ' ' -f 1) ;;
+		sum=$(sha512sum "$1" | cut -d ' ' -f 1)
+		;;
 	esac
 
 	test "$sum" = "$2"
@@ -146,8 +150,9 @@ setup_phase() {
 unpack_phase() {
 	for file in "${source[@]}"; do
 		case "$file" in
-		*.tar|*.tar.[gx]z|*.tar.bz2|*.t[bgx]z|*.tb2|*.tbz2|*.zip|*.7z)
+		*.tar | *.tar.[gx]z | *.tar.bz2 | *.t[bgx]z | *.tb2 | *.tbz2 | *.zip | *.7z)
 			extract "$(destname "$file")"
+			;;
 		esac
 	done
 
@@ -160,17 +165,23 @@ unpack_phase() {
 extract() {
 	case "$1" in
 	*.tar)
-		tar x < "$1" ;;
-	*.tar.bz2|*.tb2|*.tbz|*.tbz2)
-		bunzip2 < "$1" | tar x ;;
-	*.tar.gz|*.tgz)
-		gunzip < "$1" | tar x ;;
-	*.tar.xz|*.txz)
-		unxz < "$1" | tar x ;;
+		tar x <"$1"
+		;;
+	*.tar.bz2 | *.tb2 | *.tbz | *.tbz2)
+		bunzip2 <"$1" | tar x
+		;;
+	*.tar.gz | *.tgz)
+		gunzip <"$1" | tar x
+		;;
+	*.tar.xz | *.txz)
+		unxz <"$1" | tar x
+		;;
 	*.zip)
-		unzip "$1" ;;
+		unzip "$1"
+		;;
 	*.7z)
-		7z x "$1" ;;
+		7z x "$1"
+		;;
 	esac
 }
 

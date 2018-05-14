@@ -16,7 +16,7 @@ STEWPKGS="${STEWPKGS:-.}"
 #   * consists only of function and variable definitions (when run or sourced
 #     it does nothing on its own)
 #   * defines a `package` function which installs the software into $pkgdir
-#     and runs stow on it 
+#     and runs stow on it
 #   * inherits a default implementation from stdenv.shlib
 
 usage() {
@@ -34,12 +34,27 @@ main() {
 	action=stew_install
 	while test $# -gt 0; do
 		case "$1" in
-			-i) action=stew_install ;;
-			-l) stew_list; exit ;;
-			-r) action=stew_remove ;;
-			-s) shift; stew_search "$@"; exit ;;
-			-*) usage ;;
-			*)  "$action" "$1" ;;
+		-i)
+			action=stew_install
+			;;
+		-l)
+			stew_list
+			exit
+			;;
+		-r)
+			action=stew_remove
+			;;
+		-s)
+			shift
+			stew_search "$@"
+			exit
+			;;
+		-*)
+			usage
+			;;
+		*)
+			"$action" "$1"
+			;;
 		esac
 		shift
 	done
@@ -101,7 +116,7 @@ stew_search() {
 		if test "$matches" -eq 1; then
 			echo "$info"
 		fi
-	) done
+	); done
 }
 
 # exit codes:
