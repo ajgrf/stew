@@ -108,8 +108,8 @@ error() {
 
 use() {
 	for dir in "$STEWPKGS" "$STEWPREFIX/lib/stew"; do
-		if test -f "$dir/$1.shlib"; then
-			. "$dir/$1.shlib"
+		if test -f "$dir/${1##*/}.shlib"; then
+			. "$dir/${1##*/}.shlib"
 		fi
 	done
 }
