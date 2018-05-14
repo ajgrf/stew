@@ -210,11 +210,6 @@ install_phase() {
 	if test -f makefile -o -f Makefile -o -f GNUmakefile; then
 		autosudo make PREFIX="$pkgdir" install
 	fi
-
-	if find . -name '*.[to]t[fc]' | grep -q ''; then
-		mkdir -p "$pkgdir/share/fonts"
-		find . -name '*.[to]t[fc]' -print0 | xargs -0 cp -t "$pkgdir/share/fonts"
-	fi
 }
 
 cleanup_phase() {
