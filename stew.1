@@ -10,7 +10,7 @@
 .Op Ar pkg ...
 .Sh DESCRIPTION
 .Nm
-is a simple package manager for installing software
+is a simple source-based package manager for installing software
 outside of your distribution's repositories.
 It leverages the excellent
 .Xr stow 8
@@ -22,7 +22,7 @@ The operations are as follows:
 .Bl -tag -width Ds
 .It Fl i
 Install the specified packages.
-This is the default operation when a valid package name is specified.
+This is the default operation when a package name is specified.
 .It Fl l
 List installed packages.
 This is the default operation when no packages are specified.
@@ -35,6 +35,10 @@ can't find the corresponding package definition in
 you may need to specify the version number as well.
 .It Fl s
 Search available packages.
+The rest of the command line is used as a list of search terms
+over package names and descriptions.
+Packages must match all of the search terms.
+If no arguments are given, display all available packages.
 .El
 .Pp
 For documentation on creating your own packages, see
@@ -87,10 +91,16 @@ List installed packages:
 .Pp
 .Dl $ stew
 .Pp
-Search available packages matching the pattern
-.Sq go :
+List available packages:
 .Pp
-.Dl $ stew -s go
+.Dl $ stew -s
+.Pp
+Search available packages matching both patterns
+.Sq go
+and
+.Sq font :
+.Pp
+.Dl $ stew -s go font
 .Sh SEE ALSO
 .Xr stew 5 ,
 .Xr stow 8

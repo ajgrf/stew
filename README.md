@@ -13,13 +13,13 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-**stew** is a simple package manager for installing software outside of your distribution's repositories. It leverages the excellent stow(8) utility to manage software, but alleviates much of the boilerplate you might otherwise need to write if you wanted to automate your stow installations.
+**stew** is a simple source-based package manager for installing software outside of your distribution's repositories. It leverages the excellent stow(8) utility to manage software, but alleviates much of the boilerplate you might otherwise need to write if you wanted to automate your stow installations.
 
 The operations are as follows:
 
 **-i**
 
-> Install the specified packages. This is the default operation when a valid package name is specified.
+> Install the specified packages. This is the default operation when a package name is specified.
 
 **-l**
 
@@ -31,7 +31,7 @@ The operations are as follows:
 
 **-s**
 
-> Search available packages.
+> Search available packages. The rest of the command line is used as a list of search terms over package names and descriptions. Packages must match all of the search terms. If no arguments are given, display all available packages.
 
 For documentation on creating your own packages, see stew(5).
 
@@ -89,10 +89,16 @@ List installed packages:
 $ stew
 ```
 
-Search available packages matching the pattern 'go':
+List available packages:
 
 ```
-$ stew -s go
+$ stew -s
+```
+
+Search available packages matching both patterns 'go' and 'font':
+
+```
+$ stew -s go font
 ```
 
 SEE ALSO
