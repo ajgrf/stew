@@ -139,7 +139,9 @@ setup_phase() {
 	cd "$builddir"
 
 	# set build flags
-	eval "$(dpkg-buildflags --export=sh)"
+	if type dpkg-buildflags >/dev/null 2>&1; then
+		eval $(dpkg-buildflags --export=sh)
+	fi
 
 	export CPATH="$prefix/include"
 	export LD_RUN_PATH="$prefix/lib"
