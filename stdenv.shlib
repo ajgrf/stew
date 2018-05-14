@@ -192,11 +192,6 @@ gopathify() {
 }
 
 configure_phase() {
-	# include suckless-style config.h file
-	if test -f "../$name.config.h"; then
-		cp "../$name.config.h" config.h
-	fi
-
 	if test -x configure; then
 		if test ${#configureflags[@]} -eq 0; then
 			configureflags=("--prefix=${pkgdir}")
