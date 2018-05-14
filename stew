@@ -1,23 +1,8 @@
 #!/bin/bash
 set -e
 
-# Stew is a simple package manager for installing software outside of your
-# distribution's repositories. It leverages the excellent GNU Stow utility to
-# manage packages, but alleviates much of the boilerplate you might otherwise
-# need to write if you wanted to automate your stow installations.
-
-# configuration
-STEWPREFIX="${STEWPREFIX:-$HOME/.local}"
 STEWPKGS="${STEWPKGS:-.}"
-
-# A stew package is a shell script with the following properties:
-#
-#   * lives in a file named $name.pkg.sh in a directory in $STEWPKGS
-#   * consists only of function and variable definitions (when run or sourced
-#     it does nothing on its own)
-#   * defines a `package` function which installs the software into $pkgdir
-#     and runs stow on it
-#   * inherits a default implementation from stdenv.shlib
+STEWPREFIX="${STEWPREFIX:-$HOME/.local}"
 
 usage() {
 	echo "usage: stew [-ilrs] [pkg ...]" >&2
@@ -25,8 +10,6 @@ usage() {
 }
 
 main() {
-	local action
-
 	if test $# -eq 0; then
 		main -l
 	fi
@@ -62,10 +45,7 @@ main() {
 
 stew_install() (
 	if test -f "$STEWPKGS/$1.pkg.sh"; then
-		name="$1"
-		use stdenv
-		. "$STEWPKGS/$1.pkg.sh"
-		pkgdir="$STEWPREFIX/stow/$name${version:+-$version}"
+		use_package "$1"
 
 		# finally run the package function
 		if ! test -d "$pkgdir"; then
@@ -81,18 +61,14 @@ stew_list() {
 }
 
 stew_remove() (
-	if test -d "$STEWPREFIX/stow/$1"; then
-		pkgname="$1"
-	elif test -f "$STEWPKGS/$1.pkg.sh"; then
-		name="$1"
-		use stdenv
-		. "$STEWPKGS/$1.pkg.sh"
-		pkgname="$name${version:+-$version}"
+	pkgdir="$STEWPREFIX/stow/${1##*/}"
+	if test -f "$STEWPKGS/$1.pkg.sh"; then
+		use_package "$1"
 	fi
 
-	if test "$pkgname"; then
-		stow -d "$STEWPREFIX/stow" -D "$pkgname"
-		rm -rf "$STEWPREFIX/stow/$pkgname"
+	if test -d "$pkgdir"; then
+		stow -d "$STEWPREFIX/stow" -D "${pkgdir#$STEWPREFIX/stow/}"
+		rm -rf "$pkgdir"
 	else
 		error 3 "could not find package $1 to remove"
 	fi
@@ -100,9 +76,7 @@ stew_remove() (
 
 stew_search() {
 	for file in "$STEWPKGS"/*.pkg.sh; do (
-		name="${file%*.pkg.sh}"
-		use stdenv
-		. "$file"
+		use_package "$file"
 		info="${name}${version:+-$version}${homepage:+ ($homepage)}${description:+ - $description}"
 
 		matches=1
@@ -123,7 +97,7 @@ stew_search() {
 # 2 usage error
 # 3 packaging error
 error() {
-	local code="$1"
+	code="$1"
 	shift
 	echo stew: "$@" >&2
 	exit "$code"
@@ -135,6 +109,18 @@ use() {
 			. "$dir/$1.shlib"
 		fi
 	done
+}
+
+use_package() {
+	name="${1##*/}"
+	name="${name%*.pkg.sh}"
+	if test -f "$STEWPKGS/$name.pkg.sh"; then
+		use stdenv
+		. "$STEWPKGS/$name.pkg.sh"
+		pkgdir="$STEWPREFIX/stow/$name${version:+-$version}"
+	else
+		error 3 "could not find package $name"
+	fi
 }
 
 main "$@"
