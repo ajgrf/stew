@@ -17,7 +17,7 @@ STEWPKGS="${STEWPKGS:-.}"
 #     it does nothing on its own)
 #   * defines a `package` function which installs the software into $pkgdir
 #     and runs stow on it 
-#   * inherits a default implementation from stdenv.sh
+#   * inherits a default implementation from stdenv.shlib
 
 usage() {
 	echo "usage: stew [-ilrs] [pkg ...]" >&2
@@ -116,8 +116,8 @@ error() {
 
 use() {
 	for dir in "$STEWPKGS" "$STEWPREFIX/lib/stew"; do
-		if test -f "$dir/$1.sh"; then
-			. "$dir/$1.sh"
+		if test -f "$dir/$1.shlib"; then
+			. "$dir/$1.shlib"
 		fi
 	done
 }
