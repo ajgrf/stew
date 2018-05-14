@@ -1,3 +1,5 @@
+# Copyright 2016 Alex Griffin.  See LICENSE file for details.
+
 # This is the default implementation of the `package` function. You should not
 # normally override this function. Instead, you should override the individual
 # phases that it calls.

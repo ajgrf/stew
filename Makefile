@@ -1,8 +1,11 @@
+# Copyright 2016 Alex Griffin.  See LICENSE file for details.
+
 STEWPREFIX ?= ${HOME}/.local
 
 all: options
 
 options:
+	@echo stew make options:
 	@echo "STEWPREFIX = ${STEWPREFIX}"
 
 README.md: stew.1

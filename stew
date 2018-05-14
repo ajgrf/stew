@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2016 Alex Griffin.  See LICENSE file for details.
+
 set -e
 
 STEWPKGS="${STEWPKGS:-.}"
