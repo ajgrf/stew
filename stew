@@ -82,7 +82,7 @@ stew_search() {
 		if test -d "$pkgdir"; then
 			installed=1
 		fi
-		info="${name}${version:+-$version}${installed:= [installed]}${description:+ - $description}"
+		info="${name}${version:+-$version}${installed:+ [installed]}${description:+ - $description}"
 
 		matches=1
 		for pattern; do
