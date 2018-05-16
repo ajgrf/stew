@@ -23,11 +23,6 @@ package() {
 	unset phase
 }
 
-# shorten a git revision for use in a version number
-gitver() {
-	echo "$1" | head -c7
-}
-
 depends_phase() {
 	for stewdep in $depends; do
 		stew "$stewdep"
@@ -256,4 +251,9 @@ autosudo() {
 stow_phase() {
 	# autosudo chmod -R a-w $prefix/stow/$name-$version
 	autosudo stow -d "$prefix/stow" "$name${version:+-$version}"
+}
+
+# shorten a git revision for use in a version number
+gitver() {
+	echo "$1" | head -c7
 }
