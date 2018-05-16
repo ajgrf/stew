@@ -28,16 +28,13 @@ gitver() {
 }
 
 depends_phase() {
-	local stewprereqs
-	stewprereqs=(build-essential stow curl git)
-
 	for stewdep in "${depends[@]}"; do
 		stew "$stewdep"
 	done
 
-	for aptdep in "${stewprereqs[@]}" "${aptdepends[@]}"; do
+	for aptdep in "${aptdepends[@]}"; do
 		if ! deb_is_installed "$aptdep"; then
-			sudo apt install "${stewprereqs[@]}" "${aptdepends[@]}"
+			sudo apt install "${aptdepends[@]}"
 			break
 		fi
 	done

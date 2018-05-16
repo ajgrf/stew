@@ -1,5 +1,6 @@
 name=stew
 version=$(git show --no-patch --date=format:%Y%m%d --format=%cd.%h HEAD)
+aptdepends=(build-essential curl git stow)
 homepage="https://github.com/ajgrf/stew"
 description="simple package manager using GNU Stow"
 
