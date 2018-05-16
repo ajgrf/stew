@@ -76,17 +76,16 @@ download_phase() {
 }
 
 fetch() {
-	local src dest
 	src="${1%>*}"
 	dest=$(destname "$1")
 	if ! test -f "$dest"; then
 		echo "fetching $dest" >&2
 		curl -L "$src" >"$dest"
 	fi
+	unset src dest
 }
 
 destname() {
-	local dest
 	dest="${1##*/}"
 	dest="${dest##*>}"
 	if test -f "$STEWPKGS/$dest"; then
@@ -94,13 +93,12 @@ destname() {
 	else
 		echo "$dest"
 	fi
+	unset dest
 }
 
 # `verify_sum file sum` returns null (a.k.a. true) only if file matches sum
 verify_sum() {
-	local hashlen sum
 	hashlen=$(echo -n "$2" | wc -c)
-
 	case "$hashlen" in
 	32)
 		sum=$(md5sum "$1" | cut -d ' ' -f 1)
@@ -117,6 +115,8 @@ verify_sum() {
 	esac
 
 	test "$sum" = "$2"
+
+	unset hashlen sum
 }
 
 setup_phase() {
