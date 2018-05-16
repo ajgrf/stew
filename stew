@@ -91,11 +91,13 @@ stew_search() {
 				break
 			fi
 		done
+		unset pattern
 
 		if test "$matches" -eq 1; then
 			echo "$info"
 		fi
 	); done
+	unset file
 }
 
 # exit codes:
@@ -114,6 +116,7 @@ use() {
 			. "$dir/${1##*/}.shlib"
 		fi
 	done
+	unset dir
 }
 
 use_package() {

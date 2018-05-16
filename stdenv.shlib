@@ -18,7 +18,9 @@ package() {
 				"${subphase}_phase"
 			fi
 		done
+		unset subphase
 	done
+	unset phase
 }
 
 # shorten a git revision for use in a version number
@@ -28,15 +30,17 @@ gitver() {
 
 depends_phase() {
 	for stewdep in $depends; do
-		stew $stewdep
+		stew "$stewdep"
 	done
+	unset stewdep
 
 	for aptdep in $aptdepends; do
-		if ! deb_is_installed $aptdep; then
+		if ! deb_is_installed "$aptdep"; then
 			sudo apt install $aptdepends
 			break
 		fi
 	done
+	unset aptdep
 }
 
 deb_is_installed() {
@@ -80,6 +84,7 @@ download_phase() {
 			error 3 "could not verify integrity of file $(destname "$(field "$i" $source)")"
 		fi
 	done
+	unset i
 
 	for repo in $gitrepo; do
 		reponame="${repo%@*}"
@@ -94,6 +99,7 @@ download_phase() {
 		fi
 		cd ..
 	done
+	unset repo
 }
 
 fetch() {
@@ -146,6 +152,7 @@ setup_phase() {
 	for file in $source; do
 		cp $(destname "$file") "$builddir"
 	done
+	unset file
 
 	for repo in $gitrepo; do
 		gitpath=$(basename "${repo%@*}" .git)
@@ -153,6 +160,7 @@ setup_phase() {
 		git -C "$gitpath" archive HEAD | tar -x -C "$builddir/$gitpath"
 		unset gitpath
 	done
+	unset repo
 
 	cd "$builddir"
 
@@ -174,11 +182,13 @@ unpack_phase() {
 			;;
 		esac
 	done
+	unset file
 
 	for dir in */; do
 		test -d "$dir" && cd "$dir" || true
 		return
 	done
+	unset dir
 }
 
 extract() {
