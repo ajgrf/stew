@@ -9,10 +9,9 @@ package() {
 	cachedir="${XDG_CACHE_HOME:-$HOME/.cache}/stew/${name}${version:+-$version}"
 	mandir="$pkgdir/share/man"
 
-	phases=(depends download setup unpack patch configure build test
-		install cleanup stow)
+	for phase in depends download setup unpack patch configure build \
+		test install cleanup stow; do
 
-	for phase in "${phases[@]}"; do
 		for subphase in "pre${phase}" "${phase}" "post${phase}"; do
 			if type "${subphase}_phase" >/dev/null 2>&1; then
 				echo "Starting $name${version:+ $version} $subphase phase"
@@ -28,13 +27,13 @@ gitver() {
 }
 
 depends_phase() {
-	for stewdep in "${depends[@]}"; do
-		stew "$stewdep"
+	for stewdep in $depends; do
+		stew $stewdep
 	done
 
-	for aptdep in "${aptdepends[@]}"; do
-		if ! deb_is_installed "$aptdep"; then
-			sudo apt install "${aptdepends[@]}"
+	for aptdep in $aptdepends; do
+		if ! deb_is_installed $aptdep; then
+			sudo apt install $aptdepends
 			break
 		fi
 	done
@@ -60,7 +59,7 @@ download_phase() {
 		fi
 	done
 
-	for repo in "${gitrepo[@]}"; do
+	for repo in $gitrepo; do
 		reponame="${repo%@*}"
 		repobase=$(basename "$reponame" .git)
 		reporev="${repo##*@}"
@@ -126,7 +125,7 @@ setup_phase() {
 		cp "$(destname "$file")" "$builddir"
 	done
 
-	for repo in "${gitrepo[@]}"; do
+	for repo in $gitrepo; do
 		gitpath=$(basename "${repo%@*}" .git)
 		mkdir -p "$builddir/$gitpath"
 		git -C "$gitpath" archive HEAD | tar -x -C "$builddir/$gitpath"
