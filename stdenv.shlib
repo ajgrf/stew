@@ -185,10 +185,7 @@ extract() {
 
 configure_phase() {
 	if test -x configure; then
-		if test ${#configureflags[@]} -eq 0; then
-			configureflags=("--prefix=${pkgdir}")
-		fi
-		./configure "${configureflags[@]}"
+		./configure --prefix="$pkgdir"
 	fi
 }
 
