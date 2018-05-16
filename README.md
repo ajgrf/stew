@@ -13,7 +13,7 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-**stew** is a simple source-based package manager for installing software outside of your distribution's repositories. It leverages the excellent stow(8) utility to manage software, but alleviates much of the boilerplate you might otherwise need to write if you wanted to automate your stow installations.
+**stew** is a simple source-based package manager for installing software outside of your distribution's repositories, leveraging the excellent stow(8) utility. It's not intended for distributing software to other users, but for automating what would otherwise be manual installations.
 
 The operations are as follows:
 
