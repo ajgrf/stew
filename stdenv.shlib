@@ -45,17 +45,39 @@ deb_is_installed() {
 	fi
 }
 
+nfields() {
+	echo $#
+}
+
+field() {
+	n=$1
+	shift
+
+	i=1
+	for arg in $*; do
+		if test $i -eq $n; then
+			echo $arg
+			break
+		fi
+		i=$((i + 1))
+	done
+
+	unset arg
+	unset i
+	unset n
+}
+
 download_phase() {
-	if test ${#source[@]} -ne ${#sum[@]}; then
+	if test $(nfields $source) -ne $(nfields $sum); then
 		error 3 "$name:" 'len($source) != len($sum)'
 	fi
 
 	mkdir -p "$cachedir"
 	cd "$cachedir"
-	for i in ${!source[@]}; do
-		fetch "${source[$i]}"
-		if ! verify_sum $(destname "${source[$i]}") "${sum[$i]}"; then
-			error 3 "could not verify integrity of file $(destname "${source[$i]}")"
+	for i in $(seq $(nfields $source)); do
+		fetch $(field "$i" $source)
+		if ! verify_sum $(destname $(field "$i" $source)) $(field "$i" $sum); then
+			error 3 "could not verify integrity of file $(destname "$(field "$i" $source)")"
 		fi
 	done
 
@@ -121,8 +143,8 @@ verify_sum() {
 setup_phase() {
 	# work in temporary directory
 	mkdir "$builddir"
-	for file in "${source[@]}"; do
-		cp "$(destname "$file")" "$builddir"
+	for file in $source; do
+		cp $(destname "$file") "$builddir"
 	done
 
 	for repo in $gitrepo; do
@@ -145,10 +167,10 @@ setup_phase() {
 }
 
 unpack_phase() {
-	for file in "${source[@]}"; do
+	for file in $source; do
 		case "$file" in
 		*.tar | *.tar.[gx]z | *.tar.bz2 | *.t[bgx]z | *.tb2 | *.tbz2 | *.zip | *.7z)
-			extract "$(destname "$file")"
+			extract $(destname "$file")
 			;;
 		esac
 	done
