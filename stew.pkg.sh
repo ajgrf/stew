@@ -9,8 +9,9 @@ unset -f setup_phase
 unset -f unpack_phase
 
 install_phase() {
-	mkdir -p "$pkgdir/bin" "$pkgdir/lib/stew" "$mandir/man1"
+	mkdir -p "$pkgdir/bin" "$pkgdir/lib/stew" "$mandir/man1" "$mandir/man5"
 	cp stew "$pkgdir/bin"
 	cp stdenv.shlib "$pkgdir/lib/stew"
 	cp stew.1 "$mandir/man1"
+	cp stew.5 "$mandir/man5"
 }

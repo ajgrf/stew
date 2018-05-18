@@ -1,0 +1,148 @@
+.Dd May 17, 2018
+.Dt STEW 5
+.Os
+.Sh NAME
+.Nm stew
+.Nd package definition format for stew
+.Sh DESCRIPTION
+A
+.Nm
+package is a shell script with the following properties:
+.Bl -bullet
+.It
+It lives in the file
+.Va $name Ns .pkg.sh
+in the
+.Ev $STEWPKGS
+directory.
+.It
+It consists only of functions and variable definitions
+.Pq when run or sourced it does nothing on its own .
+.It
+It defines a
+.Fn package
+function which installs the software in
+.Va $pkgdir
+and runs stow on it.
+.It
+It inherits a default implementation from
+.Pa stdenv.shlib .
+.El
+.Pp
+.Sh PACKAGE PHASES
+.Pa stdenv.shlib
+defines a default implementation of the
+.Fn package
+function, which consists of a number distinct phases:
+.Pp
+.Bl -compact -offset Ds
+.It
+.Fn depends_phase
+.It
+.Fn download_phase
+.It
+.Fn setup_phase
+.It
+.Fn unpack_phase
+.It
+.Fn patch_phase
+.It
+.Fn configure_phase
+.It
+.Fn build_phase
+.It
+.Fn test_phase
+.It
+.Fn install_phase
+.It
+.Fn cleanup_phase
+.It
+.Fn stow_phase
+.El
+.Pp
+You should not normally define your own
+.Fn package
+function.
+Instead, you should override the individual phase that it calls.
+If you just want to run some commands before or after a particular phase,
+you can simply define a function named
+.Li pre Ns Va $phase
+or
+.Li post Ns Va $phase .
+For example,
+.Fn preconfigure_phase
+or
+.Fn postbuild_phase .
+.Nm
+will automatically insert it into the correct position in the build.
+.Pp
+For a more complete understanding of the default
+.Fn package
+function, you should read
+.Pa stdenv.shlib .
+It's not long.
+.Sh COMMON VARIABLES
+These shell variables are interpreted by
+.Nm
+or its
+.Pa stdenv.shlib :
+.Bl -tag -width Ds
+.It Va name
+The name of the package.
+This is included in the package's
+.Va $pkgdir .
+.It Va version
+The version number of the package.
+.Nm
+does not interpret this value, and has no idea how one version number
+relates to another.
+However, if defined it is also included in the package's
+.Va $pkgdir .
+.It Va description
+A short description of the package.
+This is shown when
+.Nm
+searches available packages.
+.It Va depends
+A whitespace-separated list of other stew packages that should be
+installed first.
+.It Va aptdepends
+A whitespace-separated list of Debian packages that should be
+installed first.
+.It Va source
+A whitespace-separated list of source files needed to build the package.
+They may be local
+.Pq in Ev $STEWPKGS ,
+or remote.
+Remote files may be suffixed with
+.Ql > Ns Va $filename
+to download to a specific destination filename.
+.It Va sum
+The corresponding checksums of the files in
+.Va $source .
+May be MD5, SHA1, SHA256, or SHA512 message digests.
+.It Va gitrepo
+A whitespace-separated list of git repositories to checkout.
+May be suffixed with
+.Ql @ Ns Va $revision
+to specify a particular revision, tag, or branch to use.
+.El
+.Sh SHARING CODE
+It's often useful to share code between multiple package definitions,
+especially if they share a common build system.
+By placing such code in
+.Ev $STEWPKGS Ns Pa /foo.shlib ,
+for example, you may then import it by calling the
+.Fn use
+function in your package definitions:
+.Pp
+.Dl use foo
+.Sh SEE ALSO
+.Xr sh 1 ,
+.Xr stew 1
+.Sh AUTHORS
+Written by
+.An Alex Griffin
+.Aq Mt a@ajgrf.com ,
+and licensed under the ISC license.
+See the LICENSE file for details.
