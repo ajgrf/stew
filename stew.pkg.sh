@@ -1,5 +1,5 @@
 name=stew
-version=0.1.0-pre.$(git show --no-patch --date=format:%Y%m%d --format=%cd+%h HEAD)
+version=0.1.0
 aptdepends="build-essential curl git stow"
 homepage="https://github.com/ajgrf/stew"
 description="simple package manager using GNU Stow"
@@ -7,6 +7,7 @@ description="simple package manager using GNU Stow"
 unset -f download_phase
 unset -f setup_phase
 unset -f unpack_phase
+unset -f build_phase
 
 install_phase() {
 	mkdir -p "$pkgdir/bin" "$pkgdir/lib/stew" "$mandir/man1" "$mandir/man5"
