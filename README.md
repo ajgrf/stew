@@ -27,7 +27,7 @@ The operations are as follows:
 
 **-r**
 
-> Remove the specified packages. If **stew** can't find the corresponding package definition in `STEWPKGS`, you may need to specify the version number as well.
+> Remove the specified packages. If **stew** can't find the corresponding package definition in `$STEWPKGS`, you may need to specify the version number as well.
 
 **-s**
 
@@ -38,13 +38,13 @@ For documentation on creating your own packages, see stew(5).
 INSTALLATION
 ============
 
-To install **stew** into `STEWPREFIX`, run the following command from the source directory:
+To install **stew** into `$STEWPREFIX`, run the following command from the source directory:
 
 ```
 $ make install
 ```
 
-Then make sure *$STEWPREFIX/bin* is in your `PATH`.
+Then make sure *$STEWPREFIX/bin* is in your `$PATH`.
 
 ENVIRONMENT
 ===========
@@ -118,4 +118,4 @@ Although stew's design should work fine under a variety of environments, it may 
 
 No effort has been made to secure **stew**. You should not use it with untrusted input!
 
-Linux 4.16.0-0.bpo.1-amd64 - May 16, 2018
+Linux 4.16.0-0.bpo.1-amd64 - May 17, 2018

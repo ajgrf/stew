@@ -1,4 +1,4 @@
-.Dd May 16, 2018
+.Dd May 17, 2018
 .Dt STEW 1
 .Os
 .Sh NAME
@@ -31,7 +31,7 @@ Remove the specified packages.
 If
 .Nm
 can't find the corresponding package definition in
-.Ev STEWPKGS ,
+.Ev $STEWPKGS ,
 you may need to specify the version number as well.
 .It Fl s
 Search available packages.
@@ -47,7 +47,7 @@ For documentation on creating your own packages, see
 To install
 .Nm
 into
-.Ev STEWPREFIX ,
+.Ev $STEWPREFIX ,
 run the following command from the source directory:
 .Pp
 .Dl $ make install
@@ -55,7 +55,7 @@ run the following command from the source directory:
 Then make sure
 .Pa $STEWPREFIX/bin
 is in your
-.Ev PATH .
+.Ev $PATH .
 .Sh ENVIRONMENT
 .Bl -tag -width MANPATHX
 .It Ev STEWPKGS
