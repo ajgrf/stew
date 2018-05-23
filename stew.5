@@ -7,7 +7,7 @@
 .Sh DESCRIPTION
 A
 .Nm
-package is a shell script with the following properties:
+package definition is a shell script with the following properties:
 .Bl -bullet
 .It
 It lives in the file
@@ -33,7 +33,7 @@ It inherits a default implementation from
 .Pa stdenv.shlib
 defines a default implementation of the
 .Fn package
-function, which consists of a number distinct phases:
+function, which consists of a number of distinct phases:
 .Pp
 .Bl -compact -offset Ds
 .It
@@ -63,7 +63,7 @@ function, which consists of a number distinct phases:
 You should not normally define your own
 .Fn package
 function.
-Instead, you should override the individual phase that it calls.
+Instead, you should override the individual phases that it calls.
 If you just want to run some commands before or after a particular phase,
 you can simply define a function named
 .Li pre Ns Va $phase
