@@ -1,5 +1,5 @@
 name=stew
-version=0.1.0
+version=0.1.1
 aptdepends="build-essential curl git stow"
 homepage="https://github.com/ajgrf/stew"
 description="simple package manager using GNU Stow"
