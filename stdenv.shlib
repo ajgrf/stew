@@ -51,17 +51,17 @@ field() {
 	n=$1
 	shift
 
-	i=1
+	j=1
 	for arg in $*; do
-		if test $i -eq $n; then
+		if test $j -eq $n; then
 			echo $arg
 			break
 		fi
-		i=$((i + 1))
+		j=$((j + 1))
 	done
 
 	unset arg
-	unset i
+	unset j
 	unset n
 }
 
