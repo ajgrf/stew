@@ -160,6 +160,7 @@ setup_phase() {
 
 	export CPATH="$prefix/include"
 	export LD_RUN_PATH="$prefix/lib"
+	export LDFLAGS="$LDFLAGS -L$prefix/lib"
 	export PKG_CONFIG_PATH="$prefix/lib/pkgconfig"
 }
 
